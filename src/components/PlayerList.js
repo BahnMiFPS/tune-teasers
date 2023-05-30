@@ -15,8 +15,6 @@ function PlayerList() {
 
   return (
     <Grid item xs={12} sm={6} md={4} sx={{ textAlign: "center" }}>
-      <Typography></Typography>
-
       {players.map((player) => (
         <Typography key={player.id} color={"white"}>
           {player.id}. {player.name}

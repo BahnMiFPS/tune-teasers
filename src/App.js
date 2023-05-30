@@ -5,17 +5,20 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Lobby from "./pages/Lobby";
 import Play from "./pages/Play";
 import Result from "./pages/Result";
+import { Box } from "@mui/material";
+import mainBackground from "./background.png";
+import { ToastContainer } from "react-toastify";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <HomePage />,
   },
   {
-    path: "/lobby",
+    path: "/lobby/:roomId",
     element: <Lobby />,
   },
   {
-    path: "/play",
+    path: "/play/:roomId",
     element: <Play />,
   },
   {
@@ -26,7 +29,21 @@ const router = createBrowserRouter([
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <RouterProvider router={router} />
+      <Box
+        sx={{
+          backgroundImage: `url(${mainBackground})`,
+          backgroundPosition: "center",
+          height: "100vh",
+          width: "100vw",
+          padding: 0,
+          margin: 0,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <RouterProvider router={router} />
+      </Box>
     </ThemeProvider>
   );
 }
