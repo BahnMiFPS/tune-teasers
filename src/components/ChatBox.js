@@ -12,21 +12,23 @@ import { Send } from "@mui/icons-material";
 
 const socket = io.connect("http://localhost:3001");
 
-function ChatBox() {
+function ChatBox({ roomId }) {
   const [message, setMessage] = useState("");
   const [messageReceived, setMessageReceived] = useState("");
 
   const sendMessage = () => {
     socket.emit("send_message", {
       message,
+      roomId,
     });
   };
 
   useEffect(() => {
-    socket.on("received_message", (data) => {
+    socket.on("receive_message", (data) => {
+      console.log(data, "from receive_message");
       setMessageReceived(data.message);
     });
-  }, []);
+  }, [socket]);
 
   const handleInputChange = (e) => {
     setMessage(e.target.value);
@@ -36,7 +38,6 @@ function ChatBox() {
     e.preventDefault();
     sendMessage();
   };
-
   return (
     <Grid
       item

@@ -1,12 +1,13 @@
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PlayerList from "../components/PlayerList";
 import SongThemes from "../components/SongThemes";
 import { Share } from "@mui/icons-material";
 import ChatBox from "../components/ChatBox";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-
+import io from "socket.io-client";
+const socket = io.connect("http://localhost:3001");
 function Lobby() {
   const { roomId } = useParams();
   console.log(roomId);
@@ -14,6 +15,11 @@ function Lobby() {
     navigator.clipboard.writeText(window.location.href);
     toast.success("Copied to clipboard");
   };
+
+  useEffect(() => {
+    socket.emit("join_room", roomId);
+  }, []);
+
   return (
     <Container fixed>
       <Grid
@@ -60,7 +66,7 @@ function Lobby() {
           justifyContent="space-around"
           alignItems={"center"}
         >
-          <ChatBox />
+          <ChatBox roomId={roomId} />
           <Button
             type="submit"
             variant="contained"
