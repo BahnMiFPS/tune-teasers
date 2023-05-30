@@ -1,7 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Grid, Typography } from "@mui/material";
+import { io } from "socket.io-client";
 
-function PlayerList() {
+const socket = io.connect("http://localhost:3001");
+
+function PlayerList({ playerList }) {
+  useEffect(() => {
+    console.log(playerList);
+  }, [playerList]);
+
   const players = [
     { id: 1, name: "John" },
     { id: 2, name: "Emily" },

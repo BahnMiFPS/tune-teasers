@@ -9,12 +9,16 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { faker } from "@faker-js/faker";
-import { useFormik } from "formik";
+import { replace, useFormik } from "formik";
 import * as Yup from "yup";
+import { io } from "socket.io-client";
+import { useNavigate } from "react-router-dom";
 
+const socket = io.connect("http://localhost:3001");
 function PlayerNameForm() {
   const theme = useTheme();
   const [playerName, setPlayerName] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const generatedName = faker.person.firstName();
@@ -30,10 +34,11 @@ function PlayerNameForm() {
       name: Yup.string().required("Username is invalid"),
     }),
     onSubmit: (values) => {
-      console.log(values);
-      // auth.signin(values.email, () => {
-      //   navigate(from, { replace: true });
-      // });
+      let roomId = Math.floor(Math.random() * 50);
+      navigate(`/lobby/${roomId}`, {
+        replace: true,
+        state: { name: values.name, roomId },
+      });
     },
     validateOnChange: false,
     validateOnBlur: false,
@@ -74,12 +79,7 @@ function PlayerNameForm() {
       </Grid>
 
       <Grid item xs={6}>
-        <Button
-          type="submit"
-          variant="contained"
-          color="warning"
-          disabled={formik.errors.name ? true : false}
-        >
+        <Button type="submit" variant="contained" color="warning">
           Create a Private Room
         </Button>
       </Grid>

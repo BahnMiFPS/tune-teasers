@@ -4,11 +4,19 @@ import PlayerList from "../components/PlayerList";
 import SongThemes from "../components/SongThemes";
 import { Share } from "@mui/icons-material";
 import ChatBox from "../components/ChatBox";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import io from "socket.io-client";
 const socket = io.connect("http://localhost:3001");
 function Lobby() {
+  const { state } = useLocation();
+  const [messageReceived, setMessageReceived] = useState("");
+  const [playerList, setPlayerList] = useState([]);
+
+  useEffect(() => {
+    socket.emit("create_room", { name: state.name, roomId: state.roomId });
+  }, [socket]);
+
   const { roomId } = useParams();
   const handleShareClick = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -16,8 +24,28 @@ function Lobby() {
   };
 
   useEffect(() => {
+    socket.on("room_owner", (data) => {
+      console.log("12121");
+      console.log(data, "room owner");
+      setPlayerList(data);
+    });
+  }, [socket]);
+
+  useEffect(() => {
     socket.emit("join_room", roomId);
   }, []);
+
+  useEffect(() => {
+    socket.on("message_sent", (data) => {
+      setMessageReceived(data);
+    });
+  }, [socket]);
+
+  useEffect(() => {
+    socket.on("event", (data) => {
+      console.log("🚀 ~ file: Lobby.js:31 ~ socket.on ~ data:", data);
+    });
+  }, [socket]);
 
   return (
     <Container fixed>
@@ -55,7 +83,7 @@ function Lobby() {
           alignItems={"center"}
           justifyContent={"space-around"}
         >
-          <PlayerList />
+          <PlayerList playerList={playerList} />
           <SongThemes />
         </Grid>
         <Grid
@@ -65,7 +93,7 @@ function Lobby() {
           justifyContent="space-around"
           alignItems={"center"}
         >
-          <ChatBox roomId={roomId} />
+          <ChatBox roomId={roomId} messageReceived={messageReceived} />
           <Button
             type="submit"
             variant="contained"
