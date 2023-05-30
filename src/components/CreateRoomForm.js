@@ -15,7 +15,7 @@ import { io } from "socket.io-client";
 import { useNavigate } from "react-router-dom";
 
 const socket = io.connect("http://localhost:3001");
-function PlayerNameForm() {
+function CreateRoomForm() {
   const theme = useTheme();
   const [playerName, setPlayerName] = useState("");
   const navigate = useNavigate();
@@ -79,7 +79,7 @@ function PlayerNameForm() {
       </Grid>
 
       <Grid item xs={6}>
-        <Button type="submit" variant="contained" color="warning">
+        <Button type="submit" fullWidth variant="contained" color="warning">
           Create a Private Room
         </Button>
       </Grid>
@@ -87,4 +87,4 @@ function PlayerNameForm() {
   );
 }
 
-export default PlayerNameForm;
+export default CreateRoomForm;

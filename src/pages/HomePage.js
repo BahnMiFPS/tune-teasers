@@ -1,7 +1,10 @@
 import React from "react";
 import { Container, Grid, Typography } from "@mui/material";
-import PlayerNameForm from "../components/PlayerNameForm";
+import PlayerNameForm from "../components/CreateRoomForm";
+import { Outlet, useLocation, useParams } from "react-router-dom";
 function HomePage() {
+  const { params } = useParams();
+  console.log(params);
   return (
     <Container>
       <Grid
@@ -20,7 +23,8 @@ function HomePage() {
           </Typography>
         </Grid>
         <Grid item>
-          <PlayerNameForm />
+          {/* <PlayerNameForm /> */}
+          <Outlet />
         </Grid>
       </Grid>
     </Container>

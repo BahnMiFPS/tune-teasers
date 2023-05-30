@@ -8,10 +8,22 @@ import Result from "./pages/Result";
 import { Box } from "@mui/material";
 import mainBackground from "./background.png";
 import { ToastContainer } from "react-toastify";
+import JoinRoomForm from "./components/JoinRoomForm";
+import CreateRoomForm from "./components/CreateRoomForm";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <HomePage />,
+    children: [
+      {
+        path: "invite/:roomId",
+        element: <JoinRoomForm />,
+      },
+      {
+        path: "/",
+        element: <CreateRoomForm />,
+      },
+    ],
   },
   {
     path: "/lobby/:roomId",

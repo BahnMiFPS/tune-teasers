@@ -14,7 +14,14 @@ function Lobby() {
   const [playerList, setPlayerList] = useState([]);
 
   useEffect(() => {
-    socket.emit("create_room", { name: state.name, roomId: state.roomId });
+    socket.emit("create_room", {
+      name: state.name,
+      roomId: state.roomId,
+    });
+    socket.on("room_owner", (data) => {
+      console.log("🚀 ~ file: Lobby.js:22 ~ socket.on ~ data:", data);
+      setPlayerList([...playerList, data]);
+    });
   }, [socket]);
 
   const { roomId } = useParams();
@@ -24,15 +31,8 @@ function Lobby() {
   };
 
   useEffect(() => {
-    socket.on("room_owner", (data) => {
-      console.log("12121");
-      console.log(data, "room owner");
-      setPlayerList(data);
-    });
-  }, [socket]);
-
-  useEffect(() => {
     socket.emit("join_room", roomId);
+    socket.on("user_info", (data) => {});
   }, []);
 
   useEffect(() => {
