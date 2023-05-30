@@ -10,7 +10,6 @@ import io from "socket.io-client";
 const socket = io.connect("http://localhost:3001");
 function Lobby() {
   const { roomId } = useParams();
-  console.log(roomId);
   const handleShareClick = () => {
     navigator.clipboard.writeText(window.location.href);
     toast.success("Copied to clipboard");
@@ -42,8 +41,8 @@ function Lobby() {
               </Typography>
             </Grid>
             <Grid item>
-              <Typography sx={{ fontSize: "1.25rem" }}>
-                Host: "host name"
+              <Typography sx={{ fontSize: "1.25rem", color: "white" }}>
+                Room: {roomId}
               </Typography>
             </Grid>
           </Grid>

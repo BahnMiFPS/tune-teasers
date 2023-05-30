@@ -33,12 +33,7 @@ function Result() {
         spacing={4}
       >
         <Grid item>
-          <Grid
-            container
-            direction="row"
-            justifyContent="space-between"
-            alignItems={"normal"}
-          >
+          <Grid container direction="row" justifyContent="space-between">
             <Grid item>
               <img src="/logo.svg" alt="Logo" style={{ maxWidth: "30px" }} />
             </Grid>

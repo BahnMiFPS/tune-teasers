@@ -7,15 +7,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import io from "socket.io-client";
+import { io } from "socket.io-client";
 import { Send } from "@mui/icons-material";
 
-const socket = io.connect("http://localhost:3001");
-
 function ChatBox({ roomId }) {
+  const socket = io.connect("http://localhost:3001");
   const [message, setMessage] = useState("");
   const [messageReceived, setMessageReceived] = useState("");
-
   const sendMessage = () => {
     socket.emit("send_message", {
       message,
@@ -24,9 +22,8 @@ function ChatBox({ roomId }) {
   };
 
   useEffect(() => {
-    socket.on("receive_message", (data) => {
-      console.log(data, "from receive_message");
-      setMessageReceived(data.message);
+    socket.on("message_sent", (data) => {
+      setMessageReceived(data);
     });
   }, [socket]);
 
