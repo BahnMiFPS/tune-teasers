@@ -11,10 +11,8 @@ import React, { useEffect, useState } from "react";
 import { faker } from "@faker-js/faker";
 import { replace, useFormik } from "formik";
 import * as Yup from "yup";
-import { io } from "socket.io-client";
 import { useNavigate } from "react-router-dom";
 
-const socket = io.connect("http://localhost:3001");
 function CreateRoomForm() {
   const theme = useTheme();
   const [playerName, setPlayerName] = useState("");

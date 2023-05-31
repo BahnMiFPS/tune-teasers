@@ -19,14 +19,14 @@ function Lobby() {
       roomId: state.roomId,
     });
     socket.on("room_owner", (data) => {
-      console.log("🚀 ~ file: Lobby.js:22 ~ socket.on ~ data:", data);
       setPlayerList([...playerList, data]);
     });
   }, [socket]);
 
   const { roomId } = useParams();
   const handleShareClick = () => {
-    navigator.clipboard.writeText(window.location.href);
+    navigator.clipboard.writeText(window.location.origin + `/invite/${roomId}`);
+
     toast.success("Copied to clipboard");
   };
 
@@ -42,9 +42,7 @@ function Lobby() {
   }, [socket]);
 
   useEffect(() => {
-    socket.on("event", (data) => {
-      console.log("🚀 ~ file: Lobby.js:31 ~ socket.on ~ data:", data);
-    });
+    socket.on("event", (data) => {});
   }, [socket]);
 
   return (
@@ -101,7 +99,7 @@ function Lobby() {
             startIcon={<Share />}
             onClick={handleShareClick}
           >
-            Copy Room Link
+            Invite Friends
           </Button>
           <Button type="submit" variant="contained" color="warning">
             Start Game

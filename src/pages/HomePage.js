@@ -3,8 +3,6 @@ import { Container, Grid, Typography } from "@mui/material";
 import PlayerNameForm from "../components/CreateRoomForm";
 import { Outlet, useLocation, useParams } from "react-router-dom";
 function HomePage() {
-  const { params } = useParams();
-  console.log(params);
   return (
     <Container>
       <Grid
