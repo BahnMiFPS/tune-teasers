@@ -19,7 +19,7 @@ function Lobby() {
       roomId: state.roomId,
     });
     socket.on("room_owner", (data) => {
-      setPlayerList([...playerList, data]);
+      setPlayerList((prevPlayerList) => [...prevPlayerList, data]);
     });
   }, [socket]);
 
@@ -31,8 +31,13 @@ function Lobby() {
   };
 
   useEffect(() => {
-    socket.emit("join_room", roomId);
-    socket.on("user_info", (data) => {});
+    socket.emit("join_room", {
+      name: state.name,
+      roomId: parseInt(state.roomId),
+    });
+    socket.on("user_info", (data) => {
+      setPlayerList((prevPlayerList) => [...prevPlayerList, data]);
+    });
   }, []);
 
   useEffect(() => {
