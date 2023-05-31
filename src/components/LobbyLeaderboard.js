@@ -1,15 +1,12 @@
 import React from "react";
 import { Box, Container, Typography } from "@mui/material";
 
-function LobbyLeaderboard() {
+function LobbyLeaderboard({ leaderboard }) {
+  console.log(
+    "🚀 ~ file: LobbyLeaderboard.js:5 ~ LobbyLeaderboard ~ leaderboard:",
+    leaderboard
+  );
   // Mock data for leaderboard
-  const leaderboardData = [
-    { playerName: "Player 1", score: 100 },
-    { playerName: "Player 2", score: 85 },
-    { playerName: "Player 3", score: 70 },
-    { playerName: "Player 4", score: 55 },
-    { playerName: "Player 5", score: 40 },
-  ];
 
   return (
     <Container
@@ -18,13 +15,13 @@ function LobbyLeaderboard() {
       <Typography variant="h6" mb={2}>
         Leaderboard
       </Typography>
-      {leaderboardData.map((data, index) => (
+      {leaderboard?.map((player, index) => (
         <Box key={index} display="flex" alignItems="center" mb={1}>
           <Typography variant="body1">{index + 1}.</Typography>
           <Typography variant="body1" ml={1} flexGrow={1}>
-            {data.playerName}
+            {player.name}
           </Typography>
-          <Typography variant="body1">{data.score}</Typography>
+          <Typography variant="body1">{player.score}</Typography>
         </Box>
       ))}
     </Container>

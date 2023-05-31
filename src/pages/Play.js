@@ -1,12 +1,35 @@
-import { Box, Button, Container, Grid, Typography } from "@mui/material";
-import React from "react";
-import PlayerList from "../components/PlayerList";
-import SongThemes from "../components/SongThemes";
-import { Leaderboard, Quiz, Share } from "@mui/icons-material";
+import React, { useEffect, useState } from "react";
+import { Container, Grid, Typography } from "@mui/material";
 import QuizQuestions from "../components/QuizQuestions";
 import LobbyLeaderboard from "../components/LobbyLeaderboard";
-import ChatBox from "../components/ChatBox";
+import socket from "../app/socket";
+import { useParams } from "react-router-dom";
+
 function Play() {
+  const [question, setQuestion] = useState(null);
+  const [leaderboard, setLeaderboard] = useState([]);
+  const { roomId } = useParams();
+
+  useEffect(() => {
+    socket.emit("room_game_init", parseInt(roomId));
+
+    socket.on("new_question", (data) => {
+      console.log("🚀 ~ file: Play.js:17 ~ socket.on ~ data:", data);
+
+      setQuestion(data);
+    });
+
+    socket.on("leaderboard_updated", (data) => {
+      setLeaderboard(data);
+    });
+
+    // Clean up the event listeners when component unmounts
+    return () => {
+      socket.off("new_question");
+      socket.off("leaderboard_updated");
+    };
+  }, [roomId]);
+
   return (
     <Container>
       <Grid
@@ -33,8 +56,8 @@ function Play() {
             </Grid>
           </Grid>
         </Grid>
-        <LobbyLeaderboard />
-        <QuizQuestions />
+        <LobbyLeaderboard leaderboard={leaderboard} />
+        <QuizQuestions question={question} />
 
         <Grid item alignSelf={"flex-end"}>
           <Typography color={"grey"}>Copyright </Typography>

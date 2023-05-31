@@ -7,10 +7,9 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { io } from "socket.io-client";
+import socket from "../app/socket";
 import { Send } from "@mui/icons-material";
 
-const socket = io.connect("http://localhost:3001");
 function ChatBox({ roomId, messageReceived }) {
   const [message, setMessage] = useState("");
 

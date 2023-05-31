@@ -12,9 +12,7 @@ import { faker } from "@faker-js/faker";
 import { replace, useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate, useParams } from "react-router-dom";
-import { io } from "socket.io-client";
-
-const socket = io.connect("http://localhost:3001");
+import socket from "../app/socket";
 function JoinRoomForm() {
   const theme = useTheme();
   const [playerName, setPlayerName] = useState("");
@@ -34,9 +32,11 @@ function JoinRoomForm() {
       name: Yup.string().required("Username is invalid"),
     }),
     onSubmit: (values) => {
+      const data = { name: values.name, roomId };
+      socket.emit("join_room", data);
       navigate(`/lobby/${roomId}`, {
         replace: true,
-        state: { name: values.name, roomId },
+        state: data,
       });
     },
     validateOnChange: false,

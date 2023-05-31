@@ -12,7 +12,7 @@ import { faker } from "@faker-js/faker";
 import { replace, useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
-
+import socket from "../app/socket";
 function CreateRoomForm() {
   const theme = useTheme();
   const [playerName, setPlayerName] = useState("");
@@ -33,9 +33,11 @@ function CreateRoomForm() {
     }),
     onSubmit: (values) => {
       let roomId = Math.floor(Math.random() * 50);
+      const data = { name: values.name, roomId };
+      socket.emit("create_room", data);
       navigate(`/lobby/${roomId}`, {
         replace: true,
-        state: { name: values.name, roomId },
+        state: data,
       });
     },
     validateOnChange: false,

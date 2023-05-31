@@ -4,51 +4,52 @@ import PlayerList from "../components/PlayerList";
 import SongThemes from "../components/SongThemes";
 import { Share } from "@mui/icons-material";
 import ChatBox from "../components/ChatBox";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import io from "socket.io-client";
-const socket = io.connect("http://localhost:3001");
+import socket from "../app/socket";
 function Lobby() {
   const { state } = useLocation();
   const [messageReceived, setMessageReceived] = useState("");
   const [playerList, setPlayerList] = useState([]);
-
-  useEffect(() => {
-    socket.emit("create_room", {
-      name: state.name,
-      roomId: state.roomId,
-    });
-    socket.on("room_owner", (data) => {
-      setPlayerList((prevPlayerList) => [...prevPlayerList, data]);
-    });
-  }, [socket]);
-
   const { roomId } = useParams();
+  const navigate = useNavigate();
   const handleShareClick = () => {
     navigator.clipboard.writeText(window.location.origin + `/invite/${roomId}`);
 
     toast.success("Copied to clipboard");
   };
-
+  const handleStartGame = (roomId) => {
+    socket.emit("start_game", parseInt(roomId));
+  };
   useEffect(() => {
-    socket.emit("join_room", {
-      name: state.name,
-      roomId: parseInt(state.roomId),
-    });
-    socket.on("user_info", (data) => {
-      setPlayerList((prevPlayerList) => [...prevPlayerList, data]);
-    });
-  }, []);
+    // Join room when component mounts
+    socket.emit("join_room", { name: state.name, roomId: parseInt(roomId) });
 
-  useEffect(() => {
-    socket.on("message_sent", (data) => {
+    const handleNewPlayer = (data) => {
+      setPlayerList(data.players);
+    };
+
+    const handleMessage = (data) => {
       setMessageReceived(data);
-    });
-  }, [socket]);
+    };
 
-  useEffect(() => {
-    socket.on("event", (data) => {});
-  }, [socket]);
+    const handleNavigateToPlay = (data) => {
+      navigate(`/play/${data}`, {
+        replace: true,
+      });
+    };
+
+    socket.on("new_player_joined", handleNewPlayer);
+    socket.on("message_sent", handleMessage);
+    socket.on("game_started", handleNavigateToPlay);
+
+    // Cleanup function to be run when component unmounts
+    return () => {
+      socket.off("new_player_joined", handleNewPlayer);
+      socket.off("message_sent", handleMessage);
+      socket.off("game_started", handleNavigateToPlay);
+    };
+  }, [roomId, state.name]);
 
   return (
     <Container fixed>
@@ -106,7 +107,14 @@ function Lobby() {
           >
             Invite Friends
           </Button>
-          <Button type="submit" variant="contained" color="warning">
+          <Button
+            onClick={() => {
+              handleStartGame(roomId);
+            }}
+            type="submit"
+            variant="contained"
+            color="warning"
+          >
             Start Game
           </Button>
         </Grid>
