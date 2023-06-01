@@ -1,28 +1,14 @@
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Button, Container, Grid, Typography, useTheme } from "@mui/material";
 import React from "react";
-import PlayerList from "../components/PlayerList";
-import SongThemes from "../components/SongThemes";
-import {
-  BackHand,
-  Backspace,
-  DoorBack,
-  Leaderboard,
-  Quiz,
-  Remove,
-  Share,
-} from "@mui/icons-material";
-import QuizQuestions from "../components/QuizQuestions";
+
+import { DoorBack } from "@mui/icons-material";
 import LobbyLeaderboard from "../components/LobbyLeaderboard";
+import { useLocation } from "react-router-dom";
 
 function Result() {
   const theme = useTheme();
+  const { state } = useLocation();
+
   return (
     <Container>
       <Grid
@@ -53,7 +39,8 @@ function Result() {
             </Grid>
           </Grid>
         </Grid>
-        <LobbyLeaderboard />
+        <LobbyLeaderboard leaderboard={state} />
+
         <Grid
           item
           container

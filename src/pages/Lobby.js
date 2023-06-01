@@ -3,12 +3,14 @@ import React, { useEffect, useRef, useState } from "react";
 import PlayerList from "../components/PlayerList";
 import SongThemes from "../components/SongThemes";
 import { Share } from "@mui/icons-material";
-import ChatBox from "../components/ChatBox";
+import ChatBox from "../components/ChatBox/ChatBox";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import socket from "../app/socket";
+import Chat from "../components/ChatBox/ChatBox";
 function Lobby() {
   const { state } = useLocation();
+  const [messageSent, setMessageSent] = useState("");
   const [messageReceived, setMessageReceived] = useState("");
   const [playerList, setPlayerList] = useState([]);
   const { roomId } = useParams();
@@ -39,17 +41,25 @@ function Lobby() {
       });
     };
 
+    const handleCreateRoomInstead = ({ roomId }) => {
+      console.log("no room");
+      toast.error(`Lobby ${roomId} not found or is busy`);
+      navigate(`/`);
+    };
+
+    socket.on("no_room_found", handleCreateRoomInstead);
     socket.on("new_player_joined", handleNewPlayer);
     socket.on("message_sent", handleMessage);
     socket.on("game_started", handleNavigateToPlay);
 
     // Cleanup function to be run when component unmounts
     return () => {
+      socket.off("no_room_found", handleCreateRoomInstead);
       socket.off("new_player_joined", handleNewPlayer);
       socket.off("message_sent", handleMessage);
       socket.off("game_started", handleNavigateToPlay);
     };
-  }, [roomId, state.name]);
+  }, []);
 
   return (
     <Container fixed>
@@ -88,7 +98,7 @@ function Lobby() {
           justifyContent={"space-around"}
         >
           <PlayerList playerList={playerList} />
-          <SongThemes />
+          <Chat />
         </Grid>
         <Grid
           item
@@ -97,7 +107,6 @@ function Lobby() {
           justifyContent="space-around"
           alignItems={"center"}
         >
-          <ChatBox roomId={roomId} messageReceived={messageReceived} />
           <Button
             type="submit"
             variant="contained"

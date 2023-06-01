@@ -1,35 +1,60 @@
 import React, { useEffect, useState } from "react";
-import { Container, Grid, Typography } from "@mui/material";
+import { Button, Container, Grid, Typography } from "@mui/material";
 import QuizQuestions from "../components/QuizQuestions";
 import LobbyLeaderboard from "../components/LobbyLeaderboard";
 import socket from "../app/socket";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { replace } from "formik";
+import { DoorBack } from "@mui/icons-material";
 
 function Play() {
   const [question, setQuestion] = useState(null);
+  const [isGameEnded, setIsGameEnded] = useState(false);
   const [leaderboard, setLeaderboard] = useState([]);
   const { roomId } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    socket.emit("room_game_init", parseInt(roomId));
-
-    socket.on("new_question", (data) => {
-      console.log("🚀 ~ file: Play.js:17 ~ socket.on ~ data:", data);
-
+    const newQuestion = (data) => {
       setQuestion(data);
-    });
+    };
 
-    socket.on("leaderboard_updated", (data) => {
+    const updateLeaderboard = (data) => {
+      console.log();
       setLeaderboard(data);
-    });
+    };
+
+    const correctAnswerChosen = (data) => {
+      setLeaderboard(data);
+    };
+
+    const gameEnded = () => {
+      setIsGameEnded(true);
+      console.log("game ending", isGameEnded);
+    };
+
+    socket.emit("room_game_init", parseInt(roomId));
+    socket.on("new_question", newQuestion);
+    socket.on("leaderboard_updated", updateLeaderboard);
+    socket.on("correct_answer", correctAnswerChosen);
+    socket.on("game_ended", gameEnded);
 
     // Clean up the event listeners when component unmounts
     return () => {
-      socket.off("new_question");
-      socket.off("leaderboard_updated");
+      socket.off("room_game_init");
+      socket.off("new_question", newQuestion);
+      socket.off("leaderboard_updated", updateLeaderboard);
+      socket.off("correct_answer", correctAnswerChosen);
+      socket.off("game_ended", gameEnded);
     };
-  }, [roomId]);
+  }, []);
 
+  const handleQuit = (roomId) => {
+    // Add your logic for quitting the game or leaving the room
+    // For example, you can navigate the user back to the lobby or home page
+    socket.emit("leave_room", parseInt(roomId));
+    navigate("/", { replace: true });
+  };
   return (
     <Container>
       <Grid
@@ -50,14 +75,28 @@ function Play() {
               </Typography>
             </Grid>
             <Grid item>
-              <Typography variant="h5" color={"white"}>
+              <Button
+                size="large"
+                type="submit"
+                variant="contained"
+                color="warning"
+                startIcon={<DoorBack />}
+                onClick={() => {
+                  handleQuit(roomId);
+                }}
+              >
                 Quit
-              </Typography>
+              </Button>
             </Grid>
           </Grid>
         </Grid>
-        <LobbyLeaderboard leaderboard={leaderboard} />
-        <QuizQuestions question={question} />
+        <Grid item>
+          <Grid item justifySelf={"flex-start"}>
+            <LobbyLeaderboard leaderboard={leaderboard} />
+          </Grid>
+
+          {!isGameEnded ? <QuizQuestions question={question} /> : ""}
+        </Grid>
 
         <Grid item alignSelf={"flex-end"}>
           <Typography color={"grey"}>Copyright </Typography>

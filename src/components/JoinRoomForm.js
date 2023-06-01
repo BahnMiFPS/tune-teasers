@@ -32,7 +32,7 @@ function JoinRoomForm() {
       name: Yup.string().required("Username is invalid"),
     }),
     onSubmit: (values) => {
-      const data = { name: values.name, roomId };
+      const data = { name: values.name, roomId: parseInt(roomId) };
       socket.emit("join_room", data);
       navigate(`/lobby/${roomId}`, {
         replace: true,

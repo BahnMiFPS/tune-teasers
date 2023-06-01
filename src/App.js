@@ -34,7 +34,7 @@ const router = createBrowserRouter([
     element: <Play />,
   },
   {
-    path: "/result",
+    path: "/result/:roomId",
     element: <Result />,
   },
 ]);
