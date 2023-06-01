@@ -56,7 +56,7 @@ function Play() {
     navigate("/", { replace: true });
   };
   return (
-    <Container>
+    <Container fixed>
       <Grid
         container
         flexDirection="column"
@@ -64,19 +64,24 @@ function Play() {
         height="100vh"
         spacing={4}
       >
-        <Grid item>
-          <Grid container direction="row" justifyContent="space-between">
+        <Grid item width="100%">
+          <Grid
+            container
+            direction="row"
+            justifyContent="space-between"
+            alignItems={"center"}
+            width="100%"
+          >
             <Grid item>
               <img src="/logo.svg" alt="Logo" style={{ maxWidth: "30px" }} />
             </Grid>
-            <Grid item>
+            <Grid item justifySelf={"center"}>
               <Typography variant="h5" color={"white"}>
                 Progress Bar
               </Typography>
             </Grid>
             <Grid item>
               <Button
-                size="large"
                 type="submit"
                 variant="contained"
                 color="warning"
@@ -91,7 +96,7 @@ function Play() {
           </Grid>
         </Grid>
         <Grid item>
-          <Grid item justifySelf={"flex-start"}>
+          <Grid item>
             <LobbyLeaderboard leaderboard={leaderboard} />
           </Grid>
 

@@ -67,7 +67,7 @@ function Lobby() {
         container
         flexDirection="column"
         justifyContent="space-between"
-        height="100vh"
+        minHeight="100vh"
         spacing={4}
       >
         <Grid item>
@@ -101,31 +101,36 @@ function Lobby() {
           <Chat />
         </Grid>
         <Grid
-          item
           container
+          flexDirection={"row"}
           spacing={4}
           justifyContent="space-around"
           alignItems={"center"}
+          alignSelf={"center"}
         >
-          <Button
-            type="submit"
-            variant="contained"
-            color="info"
-            startIcon={<Share />}
-            onClick={handleShareClick}
-          >
-            Invite Friends
-          </Button>
-          <Button
-            onClick={() => {
-              handleStartGame(roomId);
-            }}
-            type="submit"
-            variant="contained"
-            color="warning"
-          >
-            Start Game
-          </Button>
+          <Grid item>
+            <Button
+              type="submit"
+              variant="contained"
+              color="info"
+              startIcon={<Share />}
+              onClick={handleShareClick}
+            >
+              Invite Friends
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
+              onClick={() => {
+                handleStartGame(roomId);
+              }}
+              type="submit"
+              variant="contained"
+              color="warning"
+            >
+              Start Game
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
     </Container>

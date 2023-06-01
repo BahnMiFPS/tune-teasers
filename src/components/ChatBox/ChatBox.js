@@ -7,24 +7,33 @@ import theme from "../../theme/theme.js";
 import socket from "../../app/socket.js";
 import { useParams } from "react-router-dom";
 
-const StyledPaper = styled(Paper)`
-  width: 50vw;
-  height: 70vh;
-  max-width: 500px;
-  max-height: 700px;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  position: relative;
-  background-color: ${theme}.palette.info.main;
-`;
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  [theme.breakpoints.up("xs")]: {
+    height: "50vh",
+    minWidth: "300px",
+    maxHeight: "500px",
+    width: "50vw",
+  },
+  [theme.breakpoints.up("md")]: {
+    width: "50vw",
+    height: "70vh",
+    minWidth: "300px",
+    maxWidth: "500px",
 
-const MessagesBody = styled("div")`
-  width: calc(100% - 20px);
-  margin: 10px;
-  overflow-y: scroll;
-  height: calc(100% - 80px);
-`;
+    maxHeight: "700px",
+  },
+  display: "flex",
+  alignItems: "center",
+  flexDirection: "column",
+  position: "relative",
+}));
+
+const MessagesBody = styled("div")({
+  width: "calc(100% - 20px)",
+  margin: 10,
+  overflowY: "scroll",
+  height: "calc(100% - 80px)",
+});
 
 export default function Chat() {
   const { roomId } = useParams();
