@@ -1,17 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { Button, Container, Grid, Typography } from "@mui/material";
+import {
+  Button,
+  Container,
+  Grid,
+  LinearProgress,
+  Typography,
+} from "@mui/material";
 import QuizQuestions from "../components/QuizQuestions";
 import LobbyLeaderboard from "../components/LobbyLeaderboard";
 import socket from "../app/socket";
 import { useNavigate, useParams } from "react-router-dom";
 import { replace } from "formik";
 import { DoorBack } from "@mui/icons-material";
+import useSound from "use-sound";
+import LinearWithValueLabel from "../components/Genres/LinearWithValueLabel";
 
 function Play() {
   const [question, setQuestion] = useState(null);
   const [isGameEnded, setIsGameEnded] = useState(false);
   const [leaderboard, setLeaderboard] = useState([]);
   const { roomId } = useParams();
+  const [progress, setProgress] = useState(10);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -75,10 +84,11 @@ function Play() {
             <Grid item>
               <img src="/logo.svg" alt="Logo" style={{ maxWidth: "30px" }} />
             </Grid>
-            <Grid item justifySelf={"center"}>
-              <Typography variant="h5" color={"white"}>
-                Progress Bar
-              </Typography>
+            <Grid item justifySelf={"center"} xs={6}>
+              <LinearWithValueLabel
+                progress={progress}
+                setProgress={setProgress}
+              />
             </Grid>
             <Grid item>
               <Button
@@ -102,7 +112,6 @@ function Play() {
 
           {!isGameEnded ? <QuizQuestions question={question} /> : ""}
         </Grid>
-
         <Grid item alignSelf={"flex-end"}>
           <Typography color={"grey"}>Copyright </Typography>
         </Grid>

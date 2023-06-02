@@ -4,13 +4,15 @@ import socket from "../app/socket";
 import { useParams } from "react-router-dom";
 import { Cancel, CheckCircle, Verified } from "@mui/icons-material";
 import ReactAudioPlayer from "react-audio-player";
+
 function QuizQuestions({ question }) {
   const theme = useTheme();
   const [isCorrectAnswer, setIsCorrectAnswer] = useState(null);
   const [correctAnswerIndex, setCorrectAnswerIndex] = useState(null);
   const [chosenAnswerIndex, setChosenAnswerIndex] = useState(null);
   const { roomId } = useParams();
-  const [audio, setAudio] = useState(null);
+  const [volume, setVolume] = useState(0.5);
+
   const [countDownTimer, setCountDownTimer] = useState(null);
   const handleQuestionButton = (index) => {
     setChosenAnswerIndex(index);
@@ -36,7 +38,6 @@ function QuizQuestions({ question }) {
     setIsCorrectAnswer(null);
     setCorrectAnswerIndex(null);
     setChosenAnswerIndex(null);
-
     return () => {
       socket.off("correct_answer");
       socket.off("wrong_answer");
@@ -95,7 +96,7 @@ function QuizQuestions({ question }) {
               );
             })}
             <Grid item sx={{ justifySelf: "center", alignSelf: "center" }}>
-              <ReactAudioPlayer src={question.preview_url} autoPlay controls />;
+              <ReactAudioPlayer src={question.preview_url} autoPlay />;
             </Grid>
           </Grid>
         </>
