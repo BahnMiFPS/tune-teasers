@@ -16,7 +16,7 @@ const router = createBrowserRouter([
     element: <HomePage />,
     children: [
       {
-        path: "invite/:roomId",
+        path: "/invite/:roomId",
         element: <JoinRoomForm />,
       },
       {
