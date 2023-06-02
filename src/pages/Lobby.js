@@ -1,4 +1,4 @@
-import { Box, Button, Container, Grid, Typography } from "@mui/material";
+import { Box, Button, Card, Container, Grid, Typography } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import PlayerList from "../components/PlayerList";
 import SongThemes from "../components/SongThemes";
@@ -8,11 +8,14 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import socket from "../app/socket";
 import Chat from "../components/ChatBox/ChatBox";
+import Genre from "../components/Genres/Genre";
 function Lobby() {
   const { state } = useLocation();
   const [messageSent, setMessageSent] = useState("");
   const [messageReceived, setMessageReceived] = useState("");
   const [playerList, setPlayerList] = useState([]);
+  const [genre, setGenre] = useState("");
+
   const { roomId } = useParams();
   const navigate = useNavigate();
   const handleShareClick = () => {
@@ -36,6 +39,10 @@ function Lobby() {
     };
 
     const handleNavigateToPlay = (data) => {
+      // if (!genre) {
+      //   toast.error(`Please pick a playlist first`);
+      //   return;
+      // }
       navigate(`/play/${data}`, {
         replace: true,
       });
@@ -90,15 +97,31 @@ function Lobby() {
           </Grid>
         </Grid>
         <Grid
-          item
-          container
           spacing={2}
-          direction={"row"}
-          alignItems={"center"}
-          justifyContent={"space-around"}
+          container
+          flexDirection={"row"}
+          justifyContent={"space-between"}
+          sx={{}}
         >
-          <PlayerList playerList={playerList} />
-          <Chat />
+          <Grid
+            xs={6}
+            item
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-around",
+            }}
+          >
+            <Grid item xs={4}>
+              <PlayerList playerList={playerList} />
+            </Grid>
+            {/* <Grid item xs={8}>
+              <Genre />
+            </Grid> */}
+          </Grid>
+          <Grid item xs={6} sx={{}}>
+            <Chat />
+          </Grid>
         </Grid>
         <Grid
           container

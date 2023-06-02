@@ -69,7 +69,7 @@ export default function Chat() {
   }, []);
 
   return (
-    <Grid item sx={{ backgroundColor: "none" }}>
+    <>
       <StyledPaper elevation={2}>
         <MessagesBody>
           {messages.map((msg, index) =>
@@ -98,6 +98,6 @@ export default function Chat() {
           message={message}
         />
       </StyledPaper>
-    </Grid>
+    </>
   );
 }

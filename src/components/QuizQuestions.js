@@ -3,14 +3,15 @@ import { Button, Container, Grid, Typography, useTheme } from "@mui/material";
 import socket from "../app/socket";
 import { useParams } from "react-router-dom";
 import { Cancel, CheckCircle, Verified } from "@mui/icons-material";
-
+import ReactAudioPlayer from "react-audio-player";
 function QuizQuestions({ question }) {
   const theme = useTheme();
   const [isCorrectAnswer, setIsCorrectAnswer] = useState(null);
   const [correctAnswerIndex, setCorrectAnswerIndex] = useState(null);
   const [chosenAnswerIndex, setChosenAnswerIndex] = useState(null);
   const { roomId } = useParams();
-
+  const [audio, setAudio] = useState(null);
+  const [countDownTimer, setCountDownTimer] = useState(null);
   const handleQuestionButton = (index) => {
     setChosenAnswerIndex(index);
     socket.emit("chosen_answer", {
@@ -18,13 +19,16 @@ function QuizQuestions({ question }) {
       roomId: parseInt(roomId),
     });
   };
+  console.log(question);
 
   useEffect(() => {
     socket.on("correct_answer", (answerIndex) => {
       setIsCorrectAnswer(true);
       setCorrectAnswerIndex(answerIndex);
     });
-
+    socket.on("countdown", (time) => {
+      setCountDownTimer(time);
+    });
     socket.on("wrong_answer", () => {
       setIsCorrectAnswer(false);
     });
@@ -40,19 +44,19 @@ function QuizQuestions({ question }) {
   }, [question]);
 
   return (
-    <>
-      {question ? (
-        <Grid alignSelf="center" spacing={4}>
+    <Grid alignSelf="center" spacing={4}>
+      {question && (
+        <>
           <Typography
             variant="h5"
             textAlign="center"
             color={theme.palette.info.main}
             padding={4}
           >
-            {question.question}
+            {countDownTimer ? countDownTimer : question.question}
           </Typography>
 
-          <Grid container spacing={2}>
+          <Grid container spacing={2} sx={{ justifyContent: "center" }}>
             {question.options?.map((option, index) => {
               const isChosen = chosenAnswerIndex === index;
               const isCorrect = index === correctAnswerIndex;
@@ -90,12 +94,13 @@ function QuizQuestions({ question }) {
                 </Grid>
               );
             })}
+            <Grid item sx={{ justifySelf: "center", alignSelf: "center" }}>
+              <ReactAudioPlayer src={question.preview_url} autoPlay controls />;
+            </Grid>
           </Grid>
-        </Grid>
-      ) : (
-        ""
+        </>
       )}
-    </>
+    </Grid>
   );
 }
 
