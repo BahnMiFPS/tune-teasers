@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Container, Grid } from "@mui/material";
+import { Box, Button, Container, Grid, IconButton, Stack } from "@mui/material";
 import QuizQuestions from "../components/QuizQuestions";
 import socket from "../app/socket";
 import { useNavigate, useParams } from "react-router-dom";
@@ -15,7 +15,6 @@ function Play() {
   const { roomId } = useParams();
   const [progress, setProgress] = useState(10);
   const navigate = useNavigate();
-  console.log(question);
 
   useEffect(() => {
     const newQuestion = (data) => {
@@ -23,7 +22,6 @@ function Play() {
     };
 
     const updateLeaderboard = (data) => {
-      console.log();
       setLeaderboard(data);
     };
 
@@ -33,7 +31,6 @@ function Play() {
 
     const gameEnded = () => {
       setIsGameEnded(true);
-      console.log("game ending", isGameEnded);
     };
 
     socket.emit("room_game_init", parseInt(roomId));
@@ -53,27 +50,29 @@ function Play() {
   }, []);
 
   const handleQuit = (roomId) => {
-    // Add your logic for quitting the game or leaving the room
-    // For example, you can navigate the user back to the lobby or home page
     socket.emit("leave_room", parseInt(roomId));
     navigate("/", { replace: true });
   };
+
   return (
-    <Box>
+    <Container fixed sx={{ margin: 0, padding: 0 }}>
       <Grid
         container
-        flexDirection="column"
-        justifyContent="space-between"
-        height="100vh"
-        spacing={4}
+        sx={{
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          margin: 0,
+          padding: 0,
+        }}
       >
-        <Grid item width="100%">
+        <Grid item>
           <Grid
             container
             direction="row"
             justifyContent="space-between"
-            alignItems={"center"}
-            width="100%"
+            alignItems="center"
           >
             <Grid item>
               <img src="/logo.svg" alt="Logo" style={{ maxWidth: "30px" }} />
@@ -85,32 +84,32 @@ function Play() {
               />
             </Grid> */}
             <Grid item>
-              <Button
-                type="submit"
-                variant="contained"
+              <IconButton
                 color="warning"
-                startIcon={<DoorBack />}
                 onClick={() => {
                   handleQuit(roomId);
                 }}
               >
-                Quit
-              </Button>
+                <DoorBack />
+              </IconButton>
             </Grid>
           </Grid>
         </Grid>
         <Grid item>
-          <Grid item>
-            <LobbyLeaderboard leaderboard={leaderboard} />
+          <Grid container direction="column" spacing={2}>
+            <Grid item>
+              <LobbyLeaderboard leaderboard={leaderboard} />
+            </Grid>
+            <Grid item>
+              {!isGameEnded && <QuizQuestions question={question} />}
+            </Grid>
           </Grid>
-
-          {!isGameEnded ? <QuizQuestions question={question} /> : ""}
         </Grid>
-        <Grid item alignSelf={"flex-start"}>
+        <Grid item>
           <VolumeSlider question={question} />
         </Grid>
       </Grid>
-    </Box>
+    </Container>
   );
 }
 

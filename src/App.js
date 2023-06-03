@@ -1,4 +1,4 @@
-import { Stack, ThemeProvider } from "@mui/material";
+import { Container, Stack, ThemeProvider } from "@mui/material";
 import HomePage from "./pages/HomePage";
 import theme from "./theme/theme";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -46,12 +46,15 @@ const router = createBrowserRouter([
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <Box
+      <Container
         sx={{
           backgroundImage: `url(${mainBackground})`,
           backgroundPosition: "center",
           minHeight: "100vh",
+          minWidth: "100vw",
           display: "flex",
+          padding: 0,
+          margin: 0,
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
@@ -59,7 +62,7 @@ function App() {
         }}
       >
         <RouterProvider router={router} />
-      </Box>
+      </Container>
     </ThemeProvider>
   );
 }
