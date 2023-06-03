@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Grid, Typography } from "@mui/material";
-import { Outlet, useLocation, useParams } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 function HomePage() {
   return (
     <Container>

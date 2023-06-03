@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Button, Container, Grid, Typography, useTheme } from "@mui/material";
+import { Button, Grid, Stack, Typography, useTheme } from "@mui/material";
 import socket from "../app/socket";
 import { useParams } from "react-router-dom";
-import { Cancel, CheckCircle, Verified } from "@mui/icons-material";
-import ReactAudioPlayer from "react-audio-player";
+import { Cancel, CheckCircle } from "@mui/icons-material";
 
 function QuizQuestions({ question }) {
   const theme = useTheme();
@@ -11,7 +10,6 @@ function QuizQuestions({ question }) {
   const [correctAnswerIndex, setCorrectAnswerIndex] = useState(null);
   const [chosenAnswerIndex, setChosenAnswerIndex] = useState(null);
   const { roomId } = useParams();
-  const [volume, setVolume] = useState(0.5);
 
   const [countDownTimer, setCountDownTimer] = useState(null);
   const handleQuestionButton = (index) => {
@@ -44,7 +42,7 @@ function QuizQuestions({ question }) {
   }, [question]);
 
   return (
-    <Grid alignSelf="center" spacing={4}>
+    <Stack>
       {question && (
         <>
           <Typography
@@ -56,7 +54,7 @@ function QuizQuestions({ question }) {
             {countDownTimer ? countDownTimer : question.question}
           </Typography>
 
-          <Grid container spacing={2} sx={{ justifyContent: "center" }}>
+          <Grid container spacing={{ xs: 2, md: 3 }}>
             {question.options?.map((option, index) => {
               const isChosen = chosenAnswerIndex === index;
               const isCorrect = index === correctAnswerIndex;
@@ -75,32 +73,29 @@ function QuizQuestions({ question }) {
               }
 
               return (
-                <Grid item xs={12} sm={6} key={index}>
+                <Grid item xs={12} sm={12} md={6} key={index}>
                   <Button
+                    fullWidth
                     variant="contained"
                     disabled={isCorrectAnswer !== null}
                     style={{
                       backgroundColor,
                       color,
                     }}
-                    fullWidth
                     startIcon={startIcon}
                     onClick={() => {
                       handleQuestionButton(index);
                     }}
                   >
-                    {option}
+                    <Typography>{option}</Typography>
                   </Button>
                 </Grid>
               );
             })}
-            {/* <Grid item sx={{ justifySelf: "center", alignSelf: "center" }}>
-              <ReactAudioPlayer src={question.preview_url} autoPlay />;
-            </Grid> */}
           </Grid>
         </>
       )}
-    </Grid>
+    </Stack>
   );
 }
 

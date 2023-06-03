@@ -1,5 +1,6 @@
 import React from "react";
-import { Box, Container, Typography } from "@mui/material";
+import { Avatar, Box, Container, Paper, Typography } from "@mui/material";
+import { amber, grey, brown } from "@mui/material/colors";
 
 function LobbyLeaderboard({ leaderboard }) {
   function compareScores(a, b) {
@@ -9,23 +10,47 @@ function LobbyLeaderboard({ leaderboard }) {
   const sortedLeaderboard = leaderboard?.sort(compareScores);
 
   return (
-    <Container
-      fixed
-      sx={{ backgroundColor: "white", padding: "16px", borderRadius: "4px" }}
-    >
-      <Typography variant="h6" mb={2}>
-        Leaderboard
-      </Typography>
-      {sortedLeaderboard?.map((player, index) => (
-        <Box key={index} display="flex" alignItems="center" mb={1}>
-          <Typography variant="body1">{index + 1}.</Typography>
-          <Typography variant="body1" ml={1} flexGrow={1}>
-            {player.name}
-          </Typography>
-          <Typography variant="body1">{player.score}</Typography>
-        </Box>
-      ))}
-    </Container>
+    <Box maxHeight="400px" sx={{ overflowY: "scroll", paddingRight: "16px" }}>
+      <Container maxWidth="sm">
+        <Typography variant="h5" color="white" align="left" mb={2}>
+          Leaderboard
+        </Typography>
+        {sortedLeaderboard?.map((player, index) => (
+          <Paper
+            elevation={3}
+            sx={{
+              backgroundColor:
+                index === 0
+                  ? amber[500] // Yellow for the first place
+                  : index === 1
+                  ? grey[500] // Silver for the second place
+                  : index === 2
+                  ? brown[500] // Bronze for the third place
+                  : "white", // Default background color
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: 1,
+              marginBottom: 2,
+            }}
+            key={index}
+          >
+            <Box sx={{ display: "flex", gap: 1 }}>
+              <Avatar src={player.image} />
+              <Typography variant="h5" color="black">
+                {player.name}
+              </Typography>
+            </Box>
+            <Box>
+              <Typography variant="subtitle1" color="black">
+                {player.score} pts
+              </Typography>
+            </Box>
+          </Paper>
+        ))}
+      </Container>
+    </Box>
   );
 }
 

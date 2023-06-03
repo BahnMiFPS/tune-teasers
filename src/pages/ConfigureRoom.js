@@ -1,23 +1,45 @@
-import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { Button, Container, Grid, Typography } from "@mui/material";
 import { requests } from "../api/requests";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import PlaylistsRow from "../components/Rows/PlaylistsRow";
-import { Share } from "@mui/icons-material";
 import socket from "../app/socket";
+import CountdownComponent from "../components/WaitingLobby/CountDownComponent";
 
 function ConfigureRoom() {
   const { roomId } = useParams();
-
-  const [chosenCard, setChosenCard] = useState("");
   const navigate = useNavigate();
+  const [chosenCard, setChosenCard] = useState("");
+  const [startGameCountdown, setStartGameCountdown] = useState(false);
+  const [countdown, setCountdown] = useState(3);
 
   const handleCardClick = (id) => {
     setChosenCard(id);
+    console.log(chosenCard, id);
+  };
+
+  const handleStartCountdown = () => {
+    setStartGameCountdown(true);
+    let countdownValue = 3;
+    setCountdown(countdownValue);
+
+    const countdownInterval = setInterval(() => {
+      countdownValue--;
+      setCountdown(countdownValue);
+
+      if (countdownValue === 0) {
+        clearInterval(countdownInterval);
+        setStartGameCountdown(false);
+        socket.emit("start_game", {
+          roomId: parseInt(roomId),
+        });
+      }
+    }, 1000);
   };
 
   const handleStartGame = () => {
-    socket.emit("start_game", {
+    console.log("picked_music_starting_game");
+    socket.emit("picked_music_starting_game", {
       roomId: parseInt(roomId),
       playlistId: chosenCard,
     });
@@ -30,6 +52,7 @@ function ConfigureRoom() {
       });
     };
 
+    socket.on("countdown_start", handleStartCountdown);
     socket.on("game_started", handleNavigateToPlay);
 
     return () => {
@@ -38,23 +61,16 @@ function ConfigureRoom() {
   }, [roomId]);
 
   return (
-    <Container
-      fixed
-      sx={{
-        height: "100%",
-      }}
-    >
+    <Container fixed>
       <Grid
         container
+        flexDirection="column"
+        justifyContent="space-between"
+        alignItems="center"
+        spacing={2}
         sx={{
           height: "100%",
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          alignItems: "center",
         }}
-        spacing={2}
       >
         <Grid item xs={12}>
           <Typography variant="h5" color="white" textAlign="center">
@@ -62,16 +78,15 @@ function ConfigureRoom() {
           </Typography>
         </Grid>
         <Grid item xs={12}>
-          {requests.map((category, index) => {
-            return (
-              <PlaylistsRow
-                title={category.name}
-                url={category.url}
-                key={index}
-                handleCardClick={handleCardClick}
-              />
-            );
-          })}
+          {requests.map((category, index) => (
+            <PlaylistsRow
+              title={category.name}
+              url={category.url}
+              key={index}
+              handleCardClick={handleCardClick}
+              chosenCard={chosenCard}
+            />
+          ))}
         </Grid>
         <Grid item xs={12}>
           <Button
@@ -85,6 +100,7 @@ function ConfigureRoom() {
           </Button>
         </Grid>
       </Grid>
+      {startGameCountdown && <CountdownComponent countdown={countdown} />}
     </Container>
   );
 }

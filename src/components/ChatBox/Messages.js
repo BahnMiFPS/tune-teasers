@@ -89,25 +89,9 @@ const MessageContent = styled("p")`
   margin: 0;
 `;
 
-const MessageTimeStampRight = styled("div")`
-  position: absolute;
-  font-size: 0.85em;
-  font-weight: 300;
-  margin-top: 10px;
-  bottom: -3px;
-  right: 5px;
-`;
-
 const OrangeAvatar = styled(Avatar)`
   color: ${theme.palette.getContrastText(deepOrange[500])};
   background-color: ${deepOrange[500]};
-  width: ${theme.spacing(4)};
-  height: ${theme.spacing(4)};
-`;
-
-const AvatarNothing = styled(Avatar)`
-  color: transparent;
-  background-color: transparent;
   width: ${theme.spacing(4)};
   height: ${theme.spacing(4)};
 `;

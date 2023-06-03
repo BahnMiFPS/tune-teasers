@@ -1,13 +1,11 @@
-import { Container, Stack, ThemeProvider } from "@mui/material";
+import { Container, ThemeProvider } from "@mui/material";
 import HomePage from "./pages/HomePage";
 import theme from "./theme/theme";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Lobby from "./pages/Lobby";
 import Play from "./pages/Play";
 import Result from "./pages/Result";
-import { Box } from "@mui/material";
 import mainBackground from "./background.png";
-import { ToastContainer } from "react-toastify";
 import JoinRoomForm from "./components/Forms/JoinRoomForm";
 import CreateRoomForm from "./components/Forms/CreateRoomForm";
 import ConfigureRoom from "./pages/ConfigureRoom";
@@ -47,18 +45,16 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Container
+        fixed
         sx={{
           backgroundImage: `url(${mainBackground})`,
           backgroundPosition: "center",
           minHeight: "100vh",
           minWidth: "100vw",
           display: "flex",
-          padding: 0,
-          margin: 0,
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          padding: "1rem",
         }}
       >
         <RouterProvider router={router} />

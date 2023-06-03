@@ -1,38 +1,44 @@
-import { Box, Button, Card, Container, Grid, Typography } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
-import SongThemes from "../components/SongThemes";
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  Typography,
+  Avatar,
+  Snackbar,
+} from "@mui/material";
 import { Share } from "@mui/icons-material";
 import ChatBox from "../components/ChatBox/ChatBox";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
+import { Alert } from "@mui/material";
 import socket from "../app/socket";
-import Chat from "../components/ChatBox/ChatBox";
-import Genre from "../components/Genres/Genre";
-import PlayerList from "../components/WaitingLobby/PlayerList";
+
 function Lobby() {
   const { state } = useLocation();
-  const [messageSent, setMessageSent] = useState("");
   const [messageReceived, setMessageReceived] = useState("");
   const [playerList, setPlayerList] = useState([]);
   const [genre, setGenre] = useState("");
-
   const { roomId } = useParams();
   const navigate = useNavigate();
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
   const handleShareClick = () => {
     navigator.clipboard.writeText(window.location.origin + `/invite/${roomId}`);
-
-    toast.success("Copied to clipboard");
+    setOpenSnackbar(true);
   };
+
   const handleStartPickingMusic = (roomId) => {
     socket.emit("pick_music", parseInt(roomId));
   };
+
   const handleNavigateToConfigureRoom = (roomId) => {
     navigate(`/configure/${roomId}`, {
       replace: true,
     });
   };
+
   useEffect(() => {
-    // Join room when component mounts
     socket.emit("join_room", { name: state.name, roomId: parseInt(roomId) });
 
     const handleNewPlayer = (data) => {
@@ -45,15 +51,15 @@ function Lobby() {
 
     const handleCreateRoomInstead = ({ roomId }) => {
       console.log("no room");
-      toast.error(`Lobby ${roomId} not found or is busy`);
+      setOpenSnackbar(true);
       navigate(`/`);
     };
+
     socket.on("start_choosing_music", handleNavigateToConfigureRoom);
     socket.on("no_room_found", handleCreateRoomInstead);
     socket.on("new_player_joined", handleNewPlayer);
     socket.on("message_sent", handleMessage);
 
-    // Cleanup function to be run when component unmounts
     return () => {
       socket.off("start_choosing_music", handleNavigateToConfigureRoom);
       socket.off("no_room_found", handleCreateRoomInstead);
@@ -62,11 +68,11 @@ function Lobby() {
   }, [state.name, roomId]);
 
   return (
-    <Container fixed>
+    <>
       <Grid
         container
         flexDirection="column"
-        justifyContent="space-between"
+        justifyContent="space-around"
         minHeight="100vh"
         spacing={4}
       >
@@ -78,7 +84,7 @@ function Lobby() {
               </Button>
             </Grid>
             <Grid item>
-              <Typography variant="h5" color={"white"}>
+              <Typography variant="h5" color="white">
                 CONFIGURE GAME
               </Typography>
             </Grid>
@@ -92,9 +98,8 @@ function Lobby() {
         <Grid
           spacing={2}
           container
-          flexDirection={"row"}
-          justifyContent={"space-between"}
-          sx={{}}
+          flexDirection="row"
+          justifyContent="space-between"
         >
           <Grid
             xs={6}
@@ -105,24 +110,40 @@ function Lobby() {
               justifyContent: "space-around",
             }}
           >
-            <Grid item xs={4}>
-              <PlayerList playerList={playerList} />
+            <Grid
+              container
+              spacing={{ xs: 2, md: 3 }}
+              columns={{ xs: 4, sm: 8, md: 12 }}
+            >
+              {playerList.map((player, index) => (
+                <Grid item xs={2} sm={4} md={4} key={player.id}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      gap: 1,
+                    }}
+                  >
+                    <Avatar src={player.image}>{player.name.charAt(0)}</Avatar>
+                    <Typography color="white" variant="body1">
+                      {player.name}
+                    </Typography>
+                  </Box>
+                </Grid>
+              ))}
             </Grid>
-            {/* <Grid item xs={8}>
-              <Genre />
-            </Grid> */}
           </Grid>
-          <Grid item xs={6} sx={{}}>
-            <Chat />
+          <Grid item xs={6}>
+            <ChatBox />
           </Grid>
         </Grid>
         <Grid
           container
-          flexDirection={"row"}
+          flexDirection="row"
           spacing={4}
           justifyContent="space-around"
-          alignItems={"center"}
-          alignSelf={"center"}
+          alignItems="center"
         >
           <Grid item>
             <Button
@@ -141,9 +162,6 @@ function Lobby() {
                 handleStartPickingMusic(roomId);
               }}
               type="submit"
-              // disabled={
-              //   playerList.length <= 1 || playerList[0].id !== socket.id
-              // }
               variant="contained"
               color="warning"
             >
@@ -152,7 +170,21 @@ function Lobby() {
           </Grid>
         </Grid>
       </Grid>
-    </Container>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={() => setOpenSnackbar(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={() => setOpenSnackbar(false)}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Copied to clipboard
+        </Alert>
+      </Snackbar>
+    </>
   );
 }
 

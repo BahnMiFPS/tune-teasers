@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import Typography from "@mui/material/Typography";
+import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import { LinearProgress } from "@mui/material";
 

@@ -1,22 +1,49 @@
-import React, { useState } from "react";
+import React from "react";
 import "./style.css";
-import { Link, useParams } from "react-router-dom";
-import {
-  Box,
-  Card,
-  CardActionArea,
-  CardContent,
-  CardHeader,
-  CardMedia,
-} from "@mui/material";
+import { Card, CardActionArea, CardMedia, Box } from "@mui/material";
+import CheckIcon from "@mui/icons-material/Check";
+import theme from "../../theme/theme";
 
-function PlaylistCard({ id, image, name, handleCardClick }) {
-  const { roomId } = useParams();
+const cardStyles = {
+  width: "100%",
+  backgroundColor: "none",
+  position: "relative",
+};
 
+const cardImageStyles = {
+  position: "relative",
+};
+
+const checkIconStyles = {
+  position: "absolute",
+  bottom: "8px",
+  right: "8px",
+  color: theme.palette.info.main,
+  backgroundColor: "rgba(0, 0, 0, 0.7)",
+  borderRadius: "50%",
+  padding: "8px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  zIndex: 1,
+};
+
+function PlaylistCard({ id, image, name, handleCardClick, chosenCard }) {
   return (
-    <Card sx={{ width: "100%", backgroundColor: "none" }}>
+    <Card style={cardStyles}>
       <CardActionArea onClick={() => handleCardClick(id)}>
-        <CardMedia component="img" image={image} alt={name} />
+        <CardMedia
+          component="img"
+          image={image}
+          alt={name}
+          style={cardImageStyles}
+          loading="lazy"
+        />
+        {chosenCard === id && (
+          <Box style={checkIconStyles}>
+            <CheckIcon fontSize="small" />
+          </Box>
+        )}
       </CardActionArea>
     </Card>
   );

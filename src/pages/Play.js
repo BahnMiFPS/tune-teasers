@@ -1,20 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Container, Grid, IconButton, Stack } from "@mui/material";
+import {
+  Container,
+  Grid,
+  IconButton,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import QuizQuestions from "../components/QuizQuestions";
 import socket from "../app/socket";
 import { useNavigate, useParams } from "react-router-dom";
 import { DoorBack } from "@mui/icons-material";
-import LinearWithValueLabel from "../components/Genres/LinearWithValueLabel";
 import LobbyLeaderboard from "../components/WaitingLobby/LobbyLeaderboard";
 import VolumeSlider from "../components/PlayLobby/VolumeSlider";
+import ChatBox from "../components/ChatBox/ChatBox";
 
 function Play() {
   const [question, setQuestion] = useState(null);
   const [isGameEnded, setIsGameEnded] = useState(false);
   const [leaderboard, setLeaderboard] = useState([]);
   const { roomId } = useParams();
-  const [progress, setProgress] = useState(10);
   const navigate = useNavigate();
+  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   useEffect(() => {
     const newQuestion = (data) => {
@@ -55,7 +61,7 @@ function Play() {
   };
 
   return (
-    <Container fixed sx={{ margin: 0, padding: 0 }}>
+    <Container fixed sx={{}}>
       <Grid
         container
         sx={{
@@ -63,8 +69,6 @@ function Play() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          margin: 0,
-          padding: 0,
         }}
       >
         <Grid item>
@@ -77,12 +81,7 @@ function Play() {
             <Grid item>
               <img src="/logo.svg" alt="Logo" style={{ maxWidth: "30px" }} />
             </Grid>
-            {/* <Grid item justifySelf={"center"} xs={6}>
-              <LinearWithValueLabel
-                progress={progress}
-                setProgress={setProgress}
-              />
-            </Grid> */}
+
             <Grid item>
               <IconButton
                 color="warning"
@@ -97,8 +96,17 @@ function Play() {
         </Grid>
         <Grid item>
           <Grid container direction="column" spacing={2}>
-            <Grid item>
-              <LobbyLeaderboard leaderboard={leaderboard} />
+            <Grid
+              container
+              direction={isSmallScreen ? "column" : "row"}
+              spacing={2}
+            >
+              <Grid item xs={12} sm={6}>
+                <LobbyLeaderboard leaderboard={leaderboard} />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <ChatBox />
+              </Grid>
             </Grid>
             <Grid item>
               {!isGameEnded && <QuizQuestions question={question} />}

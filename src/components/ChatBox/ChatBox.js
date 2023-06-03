@@ -1,45 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { styled } from "@mui/material/styles";
-import { Grid, Paper } from "@mui/material";
+import { Paper, Grid } from "@mui/material";
 import { TextInput } from "./TextInput.js";
 import { MessageLeft, MessageRight } from "./Messages.js";
-import theme from "../../theme/theme.js";
 import socket from "../../app/socket.js";
 import { useParams } from "react-router-dom";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
-  [theme.breakpoints.up("xs")]: {
-    height: "50vh",
-    minWidth: "300px",
-    maxHeight: "500px",
-    width: "50vw",
-  },
-  [theme.breakpoints.up("md")]: {
-    width: "50vw",
-    height: "70vh",
-    minWidth: "300px",
-    maxWidth: "500px",
-
-    maxHeight: "700px",
-  },
+  height: "40vh",
+  maxWidth: "500px",
+  maxHeight: "700px",
   display: "flex",
   alignItems: "center",
   flexDirection: "column",
   position: "relative",
 }));
 
-const MessagesBody = styled("div")({
-  width: "calc(100% - 20px)",
-  margin: 10,
+const MessagesBody = styled("div")(({ theme }) => ({
+  width: "100%",
+  margin: "10px",
   overflowY: "scroll",
-  height: "calc(100% - 80px)",
-});
+  flex: "1",
+}));
 
-export default function Chat() {
+export default function ChatBox() {
   const { roomId } = useParams();
 
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const messagesBodyRef = useRef(null);
 
   const handleInputChange = (e) => {
     setMessage(e.target.value);
@@ -63,41 +52,48 @@ export default function Chat() {
       setMessages((prevMessages) => [...prevMessages, data]);
     });
 
+    // Scroll to the bottom of the messages body
+    if (messagesBodyRef.current) {
+      messagesBodyRef.current.scrollTop = messagesBodyRef.current.scrollHeight;
+    }
+
     return () => {
       socket.off("message_sent");
     };
-  }, []);
+  }, [messages]);
 
   return (
-    <>
-      <StyledPaper elevation={2}>
-        <MessagesBody>
-          {messages.map((msg, index) =>
-            msg.sender === socket.id ? (
-              <MessageRight
-                key={index}
-                message={msg.message}
-                photoURL={msg.photoURL}
-                displayName={msg.displayName}
-                avatarDisp={true}
-              />
-            ) : (
-              <MessageLeft
-                key={index}
-                message={msg.message}
-                photoURL={msg.photoURL}
-                displayName={msg.displayName}
-                avatarDisp={false}
-              />
-            )
-          )}
-        </MessagesBody>
-        <TextInput
-          handleFormSubmit={handleFormSubmit}
-          handleInputChange={handleInputChange}
-          message={message}
-        />
-      </StyledPaper>
-    </>
+    <StyledPaper elevation={2}>
+      <MessagesBody ref={messagesBodyRef}>
+        {messages.map((msg, index) =>
+          msg.sender === socket.id ? (
+            <MessageRight
+              key={index}
+              message={msg.message}
+              photoURL={msg.photoURL}
+              displayName={msg.displayName}
+              avatarDisp={true}
+            />
+          ) : (
+            <MessageLeft
+              key={index}
+              message={msg.message}
+              photoURL={msg.photoURL}
+              displayName={msg.displayName}
+              avatarDisp={false}
+            />
+          )
+        )}
+      </MessagesBody>
+      <Grid container justifyContent="center" alignItems="center" margin={1}>
+        <Grid item xs={8} md={10}>
+          <TextInput
+            handleFormSubmit={handleFormSubmit}
+            handleInputChange={handleInputChange}
+            message={message}
+          />
+        </Grid>
+      </Grid>
+    </StyledPaper>
   );
 }

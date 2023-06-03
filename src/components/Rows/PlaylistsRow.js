@@ -13,7 +13,7 @@ const RowTitle = styled(Typography)(({ theme }) => ({
   color: theme.palette.common.white,
 }));
 
-function PlaylistsRow({ title, url, handleCardClick }) {
+function PlaylistsRow({ title, url, handleCardClick, chosenCard }) {
   const [playlists, setPlaylists] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -59,14 +59,18 @@ function PlaylistsRow({ title, url, handleCardClick }) {
               className="mySwiper"
             >
               {playlists.map((playlist) => (
-                <SwiperSlide key={playlist.id} style={{ background: "none" }}>
-                  <PlaylistCard
-                    id={playlist.id}
-                    image={playlist.image}
-                    name={playlist.name}
-                    handleCardClick={handleCardClick}
-                  />
-                </SwiperSlide>
+                <>
+                  <SwiperSlide key={playlist.id} style={{ background: "none" }}>
+                    <PlaylistCard
+                      id={playlist.id}
+                      image={playlist.image}
+                      name={playlist.name}
+                      handleCardClick={handleCardClick}
+                      chosenCard={chosenCard}
+                    />
+                  </SwiperSlide>
+                  <div class="swiper-lazy-preloader"></div>
+                </>
               ))}
             </Swiper>
           </Grid>
