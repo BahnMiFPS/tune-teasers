@@ -2,8 +2,8 @@ import { Button, Container, Grid, Typography, useTheme } from "@mui/material";
 import React from "react";
 
 import { DoorBack } from "@mui/icons-material";
-import LobbyLeaderboard from "../components/LobbyLeaderboard";
 import { useLocation } from "react-router-dom";
+import LobbyLeaderboard from "../components/WaitingLobby/LobbyLeaderboard";
 
 function Result() {
   const theme = useTheme();

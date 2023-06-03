@@ -7,13 +7,13 @@ import {
   Typography,
 } from "@mui/material";
 import QuizQuestions from "../components/QuizQuestions";
-import LobbyLeaderboard from "../components/LobbyLeaderboard";
 import socket from "../app/socket";
 import { useNavigate, useParams } from "react-router-dom";
 import { replace } from "formik";
 import { DoorBack } from "@mui/icons-material";
 import useSound from "use-sound";
 import LinearWithValueLabel from "../components/Genres/LinearWithValueLabel";
+import LobbyLeaderboard from "../components/WaitingLobby/LobbyLeaderboard";
 
 function Play() {
   const [question, setQuestion] = useState(null);

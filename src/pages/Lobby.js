@@ -1,6 +1,5 @@
 import { Box, Button, Card, Container, Grid, Typography } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
-import PlayerList from "../components/PlayerList";
 import SongThemes from "../components/SongThemes";
 import { Share } from "@mui/icons-material";
 import ChatBox from "../components/ChatBox/ChatBox";
@@ -9,6 +8,7 @@ import { toast } from "react-toastify";
 import socket from "../app/socket";
 import Chat from "../components/ChatBox/ChatBox";
 import Genre from "../components/Genres/Genre";
+import PlayerList from "../components/WaitingLobby/PlayerList";
 function Lobby() {
   const { state } = useLocation();
   const [messageSent, setMessageSent] = useState("");
@@ -23,8 +23,12 @@ function Lobby() {
 
     toast.success("Copied to clipboard");
   };
-  const handleStartGame = (roomId) => {
-    socket.emit("start_game", parseInt(roomId));
+  const handleStartGame = (roomId, playlistId) => {
+    navigate(`/configure/${roomId}`, {
+      replace: true,
+    });
+    // choose music
+    // socket.emit("start_game", parseInt(roomId));
   };
   useEffect(() => {
     // Join room when component mounts
@@ -53,7 +57,6 @@ function Lobby() {
       toast.error(`Lobby ${roomId} not found or is busy`);
       navigate(`/`);
     };
-
     socket.on("no_room_found", handleCreateRoomInstead);
     socket.on("new_player_joined", handleNewPlayer);
     socket.on("message_sent", handleMessage);
@@ -62,11 +65,10 @@ function Lobby() {
     // Cleanup function to be run when component unmounts
     return () => {
       socket.off("no_room_found", handleCreateRoomInstead);
-      socket.off("new_player_joined", handleNewPlayer);
       socket.off("message_sent", handleMessage);
       socket.off("game_started", handleNavigateToPlay);
     };
-  }, []);
+  }, [state.name, roomId]);
 
   return (
     <Container fixed>
@@ -148,6 +150,9 @@ function Lobby() {
                 handleStartGame(roomId);
               }}
               type="submit"
+              // disabled={
+              //   playerList.length <= 1 || playerList[0].id !== socket.id
+              // }
               variant="contained"
               color="warning"
             >

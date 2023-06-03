@@ -11,13 +11,13 @@ import React, { useEffect, useState } from "react";
 import { faker } from "@faker-js/faker";
 import { replace, useFormik } from "formik";
 import * as Yup from "yup";
-import { useNavigate, useParams } from "react-router-dom";
-import socket from "../app/socket";
-function JoinRoomForm() {
+import { useNavigate } from "react-router-dom";
+import socket from "../../app/socket";
+function CreateRoomForm() {
   const theme = useTheme();
   const [playerName, setPlayerName] = useState("");
   const navigate = useNavigate();
-  const { roomId } = useParams();
+
   useEffect(() => {
     const generatedName = faker.person.firstName();
     setPlayerName(generatedName);
@@ -32,8 +32,9 @@ function JoinRoomForm() {
       name: Yup.string().required("Username is invalid"),
     }),
     onSubmit: (values) => {
-      const data = { name: values.name, roomId: parseInt(roomId) };
-      socket.emit("join_room", data);
+      let roomId = Math.floor(Math.random() * 50);
+      const data = { name: values.name, roomId };
+      socket.emit("create_room", data);
       navigate(`/lobby/${roomId}`, {
         replace: true,
         state: data,
@@ -79,11 +80,11 @@ function JoinRoomForm() {
 
       <Grid item xs={6}>
         <Button type="submit" fullWidth variant="contained" color="warning">
-          Join Room
+          Create a Private Room
         </Button>
       </Grid>
     </Grid>
   );
 }
 
-export default JoinRoomForm;
+export default CreateRoomForm;

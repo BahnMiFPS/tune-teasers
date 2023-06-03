@@ -8,8 +8,9 @@ import Result from "./pages/Result";
 import { Box } from "@mui/material";
 import mainBackground from "./background.png";
 import { ToastContainer } from "react-toastify";
-import JoinRoomForm from "./components/JoinRoomForm";
-import CreateRoomForm from "./components/CreateRoomForm";
+import JoinRoomForm from "./components/Forms/JoinRoomForm";
+import CreateRoomForm from "./components/Forms/CreateRoomForm";
+import ConfigureRoom from "./pages/ConfigureRoom";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
     element: <Lobby />,
   },
   {
+    path: "/configure/:roomId",
+    element: <ConfigureRoom />,
+  },
+  {
     path: "/play/:roomId",
     element: <Play />,
   },
@@ -46,7 +51,6 @@ function App() {
           backgroundImage: `url(${mainBackground})`,
           backgroundPosition: "center",
           height: "100vh",
-          width: "100vw",
           padding: 0,
           margin: 0,
           display: "flex",
