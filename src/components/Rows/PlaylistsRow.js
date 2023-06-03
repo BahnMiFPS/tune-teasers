@@ -1,24 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  Grid,
-  Box,
-  Container,
-  CircularProgress,
-  Typography,
-} from "@mui/material";
+import { Grid, Box, CircularProgress, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import theme from "../../theme/theme";
-// Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper";
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
 
-import "./style.css";
-
 import PlaylistCard from "./PlaylistCard";
+
+const RowTitle = styled(Typography)(({ theme }) => ({
+  color: theme.palette.common.white,
+}));
 
 function PlaylistsRow({ title, url, handleCardClick }) {
   const [playlists, setPlaylists] = useState([]);
@@ -29,7 +22,6 @@ function PlaylistsRow({ title, url, handleCardClick }) {
       try {
         const response = await axios.get(url);
         setPlaylists(response.data.data);
-        console.log(playlists);
         setIsLoading(false);
       } catch (error) {
         console.error(error);
@@ -45,27 +37,30 @@ function PlaylistsRow({ title, url, handleCardClick }) {
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <CircularProgress />
         </Box>
-      ) : playlists.length > 1 ? (
-        <Grid container spacing="8">
-          <Grid item>
-            <Typography className="row-title" variant="h5" color="white">
-              {title}
-            </Typography>
+      ) : (
+        <Grid container>
+          <Grid item xs={12}>
+            <RowTitle variant="h6">{title}</RowTitle>
           </Grid>
-          <Grid item maxWidth={true} maxHeight={true}>
+          <Grid item xs={12}>
             <Swiper
               slidesPerView={6}
               spaceBetween={30}
               pagination={{
                 clickable: true,
               }}
+              breakpoints={{
+                0: { slidesPerView: 1 },
+                480: { slidesPerView: 3, spaceBetween: 16 },
+                900: { slidesPerView: 4, spaceBetween: 16 },
+                1200: { slidesPerView: 8, spaceBetween: 16 },
+              }}
               modules={[Pagination]}
               className="mySwiper"
             >
               {playlists.map((playlist) => (
-                <SwiperSlide>
+                <SwiperSlide key={playlist.id} style={{ background: "none" }}>
                   <PlaylistCard
-                    key={playlist.id}
                     id={playlist.id}
                     image={playlist.image}
                     name={playlist.name}
@@ -76,8 +71,6 @@ function PlaylistsRow({ title, url, handleCardClick }) {
             </Swiper>
           </Grid>
         </Grid>
-      ) : (
-        ""
       )}
     </>
   );

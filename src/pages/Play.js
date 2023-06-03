@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Container, Grid } from "@mui/material";
+import { Box, Button, Container, Grid } from "@mui/material";
 import QuizQuestions from "../components/QuizQuestions";
 import socket from "../app/socket";
 import { useNavigate, useParams } from "react-router-dom";
@@ -59,7 +59,7 @@ function Play() {
     navigate("/", { replace: true });
   };
   return (
-    <Container fixed>
+    <Box>
       <Grid
         container
         flexDirection="column"
@@ -110,7 +110,7 @@ function Play() {
           <VolumeSlider question={question} />
         </Grid>
       </Grid>
-    </Container>
+    </Box>
   );
 }
 

@@ -12,12 +12,10 @@ function ConfigureRoom() {
   const [chosenCard, setChosenCard] = useState("");
   const navigate = useNavigate();
 
-  // socket.emit("start_game", parseInt(roomId));
   const handleCardClick = (id) => {
     setChosenCard(id);
   };
 
-  console.log(chosenCard);
   const handleStartGame = () => {
     socket.emit("start_game", {
       roomId: parseInt(roomId),
@@ -26,8 +24,6 @@ function ConfigureRoom() {
   };
 
   useEffect(() => {
-    // Join room when component mounts
-
     const handleNavigateToPlay = (data) => {
       navigate(`/play/${data}`, {
         replace: true,
@@ -36,39 +32,52 @@ function ConfigureRoom() {
 
     socket.on("game_started", handleNavigateToPlay);
 
-    // Cleanup function to be run when component unmounts
     return () => {
       socket.off("game_started", handleNavigateToPlay);
     };
   }, [roomId]);
+
   return (
-    <Container fixed>
-      <Typography variant="h5" color="white" textAlign="center">
-        Pick your vibe
-      </Typography>
-      {requests.map((category, index) => {
-        return (
-          <PlaylistsRow
-            title={category.name}
-            url={category.url}
-            key={index}
-            handleCardClick={handleCardClick}
-          />
-        );
-      })}
+    <Container
+      fixed
+      sx={{
+        height: "100%",
+      }}
+    >
       <Grid
-        marginTop={4}
         container
-        flexDirection={"row"}
-        justifyContent="space-around"
-        alignItems={"center"}
-        alignSelf={"center"}
+        sx={{
+          height: "100%",
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+        spacing={2}
       >
-        <Grid item>
+        <Grid item xs={12}>
+          <Typography variant="h5" color="white" textAlign="center">
+            Pick your vibe
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          {requests.map((category, index) => {
+            return (
+              <PlaylistsRow
+                title={category.name}
+                url={category.url}
+                key={index}
+                handleCardClick={handleCardClick}
+              />
+            );
+          })}
+        </Grid>
+        <Grid item xs={12}>
           <Button
             onClick={handleStartGame}
             type="submit"
-            disabled={chosenCard === null}
+            disabled={chosenCard === ""}
             variant="contained"
             color="warning"
           >

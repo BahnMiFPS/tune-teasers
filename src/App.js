@@ -1,4 +1,4 @@
-import { ThemeProvider } from "@mui/material";
+import { Stack, ThemeProvider } from "@mui/material";
 import HomePage from "./pages/HomePage";
 import theme from "./theme/theme";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -50,13 +50,12 @@ function App() {
         sx={{
           backgroundImage: `url(${mainBackground})`,
           backgroundPosition: "center",
-          height: "100vh",
-          width: "100vw",
-          padding: 0,
-          margin: 0,
+          minHeight: "100vh",
           display: "flex",
+          flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
+          padding: "1rem",
         }}
       >
         <RouterProvider router={router} />
