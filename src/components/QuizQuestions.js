@@ -21,7 +21,6 @@ function QuizQuestions({ question }) {
       roomId: parseInt(roomId),
     });
   };
-  console.log(question);
 
   useEffect(() => {
     socket.on("correct_answer", (answerIndex) => {
@@ -95,9 +94,9 @@ function QuizQuestions({ question }) {
                 </Grid>
               );
             })}
-            <Grid item sx={{ justifySelf: "center", alignSelf: "center" }}>
+            {/* <Grid item sx={{ justifySelf: "center", alignSelf: "center" }}>
               <ReactAudioPlayer src={question.preview_url} autoPlay />;
-            </Grid>
+            </Grid> */}
           </Grid>
         </>
       )}

@@ -1,85 +1,20 @@
-.row {
-  width: 100%;
-  margin-top: 0;
-}
-.movie-card {
-  background-color: #222;
-  background-image: linear-gradient(rgba(0, 0, 0, 0), #000);
-  display: flex;
-  transition-duration: 0.2s;
-  overflow-x: hidden;
-  border-radius: 4px !important;
-  transition: transform 0.45s;
-}
-
-.movie-card-container {
-  width: 140px;
-  position: relative;
-}
-.movie-card-img {
-  height: 120px;
-}
-
-.movie-card:hover {
-}
-.progress-background {
-  background-color: rgb(64, 64, 64);
-  z-index: 1;
-}
 .row-title {
   color: white;
-  font-size: 30px;
   letter-spacing: 8px;
 }
 
-.row-posters {
+.mySwiper {
   width: 100%;
-  padding-top: 1rem;
-  padding-bottom: 2rem;
-  display: flex;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 1rem;
-}
-
-.cast-posters {
-  width: 100%;
-}
-
-.cast-container {
-  display: flex;
-  flex-direction: column;
-  height: 350px;
-  width: 180px;
-}
-
-.cast-container .MuiCardHeader-title {
-  font-size: 1.2rem;
-}
-.cast-container .MuiCardHeader-subheader {
-  font-size: 0.7rem;
-}
-.row-posters::-webkit-scrollbar {
-  display: none;
-}
-
-.handle {
-  color: white;
-  background-color: rgb(64, 64, 64);
   height: 100%;
 }
 
-@media screen and (max-width: 500px) {
-  .row-title {
-    font-size: 25px;
-  }
-}
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
 
-@media screen and (max-width: 420px) {
-  .row-title {
-    font-size: 23px;
-  }
+  /* Center slide text vertically */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

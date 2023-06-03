@@ -23,12 +23,13 @@ function Lobby() {
 
     toast.success("Copied to clipboard");
   };
-  const handleStartGame = (roomId, playlistId) => {
+  const handleStartPickingMusic = (roomId) => {
+    socket.emit("pick_music", parseInt(roomId));
+  };
+  const handleNavigateToConfigureRoom = (roomId) => {
     navigate(`/configure/${roomId}`, {
       replace: true,
     });
-    // choose music
-    // socket.emit("start_game", parseInt(roomId));
   };
   useEffect(() => {
     // Join room when component mounts
@@ -42,31 +43,21 @@ function Lobby() {
       setMessageReceived(data);
     };
 
-    const handleNavigateToPlay = (data) => {
-      // if (!genre) {
-      //   toast.error(`Please pick a playlist first`);
-      //   return;
-      // }
-      navigate(`/play/${data}`, {
-        replace: true,
-      });
-    };
-
     const handleCreateRoomInstead = ({ roomId }) => {
       console.log("no room");
       toast.error(`Lobby ${roomId} not found or is busy`);
       navigate(`/`);
     };
+    socket.on("start_choosing_music", handleNavigateToConfigureRoom);
     socket.on("no_room_found", handleCreateRoomInstead);
     socket.on("new_player_joined", handleNewPlayer);
     socket.on("message_sent", handleMessage);
-    socket.on("game_started", handleNavigateToPlay);
 
     // Cleanup function to be run when component unmounts
     return () => {
+      socket.off("start_choosing_music", handleNavigateToConfigureRoom);
       socket.off("no_room_found", handleCreateRoomInstead);
       socket.off("message_sent", handleMessage);
-      socket.off("game_started", handleNavigateToPlay);
     };
   }, [state.name, roomId]);
 
@@ -147,7 +138,7 @@ function Lobby() {
           <Grid item>
             <Button
               onClick={() => {
-                handleStartGame(roomId);
+                handleStartPickingMusic(roomId);
               }}
               type="submit"
               // disabled={
