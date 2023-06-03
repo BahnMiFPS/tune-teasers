@@ -53,7 +53,7 @@ function PlaylistsRow({ title, url, handleCardClick }) {
                 0: { slidesPerView: 1 },
                 480: { slidesPerView: 3, spaceBetween: 16 },
                 900: { slidesPerView: 4, spaceBetween: 16 },
-                1200: { slidesPerView: 8, spaceBetween: 16 },
+                1200: { slidesPerView: 6, spaceBetween: 16 },
               }}
               modules={[Pagination]}
               className="mySwiper"
