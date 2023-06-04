@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
-  Container,
   Grid,
   Typography,
   Avatar,
@@ -19,7 +18,6 @@ function Lobby() {
   const { state } = useLocation();
   const [messageReceived, setMessageReceived] = useState("");
   const [playerList, setPlayerList] = useState([]);
-  const [genre, setGenre] = useState("");
   const { roomId } = useParams();
   const navigate = useNavigate();
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -79,7 +77,7 @@ function Lobby() {
       socket.off("no_room_found", handleCreateRoomInstead);
       socket.off("message_sent", handleMessage);
     };
-  }, [state.name, roomId]);
+  }, [state.name, roomId, handleNavigateToConfigureRoom, navigate]);
 
   return (
     <>

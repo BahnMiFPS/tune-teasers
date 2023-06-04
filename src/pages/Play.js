@@ -4,7 +4,6 @@ import {
   Container,
   Grid,
   IconButton,
-  Typography,
   useMediaQuery,
 } from "@mui/material";
 import QuizQuestions from "../components/QuizQuestions";
@@ -54,7 +53,7 @@ function Play() {
       socket.off("correct_answer", correctAnswerChosen);
       socket.off("game_ended", gameEnded);
     };
-  }, []);
+  }, [roomId]);
 
   const handleQuit = (roomId) => {
     socket.emit("leave_room", parseInt(roomId));
