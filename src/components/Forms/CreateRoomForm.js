@@ -14,7 +14,7 @@ function CreateRoomForm() {
     const generatedName = faker.person.firstName();
     setPlayerName(generatedName);
     formik.setFieldValue("name", generatedName);
-  }, [formik]);
+  }, []);
 
   const formik = useFormik({
     initialValues: {

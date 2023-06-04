@@ -58,7 +58,7 @@ function ConfigureRoom() {
     return () => {
       socket.off("game_started", handleNavigateToPlay);
     };
-  }, [roomId, handleStartCountdown, navigate]);
+  }, [roomId]);
 
   return (
     <Container fixed>

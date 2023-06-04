@@ -77,7 +77,7 @@ function Lobby() {
       socket.off("no_room_found", handleCreateRoomInstead);
       socket.off("message_sent", handleMessage);
     };
-  }, [state.name, roomId, handleNavigateToConfigureRoom, navigate]);
+  }, [state.name, roomId, navigate]);
 
   return (
     <>
