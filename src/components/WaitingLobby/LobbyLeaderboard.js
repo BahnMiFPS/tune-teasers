@@ -1,6 +1,7 @@
 import React from "react";
 import { Avatar, Box, Container, Paper, Typography } from "@mui/material";
 import { amber, grey, brown } from "@mui/material/colors";
+import socket from "../../app/socket";
 
 function LobbyLeaderboard({ leaderboard }) {
   function compareScores(a, b) {
@@ -39,7 +40,7 @@ function LobbyLeaderboard({ leaderboard }) {
             <Box sx={{ display: "flex", gap: 1 }}>
               <Avatar src={player.image} />
               <Typography variant="h5" color="black">
-                {player.name}
+                {player.id === socket.id ? "YOU" : player.name}
               </Typography>
             </Box>
             <Box>

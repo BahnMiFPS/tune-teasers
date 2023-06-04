@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Box,
   Button,
   Container,
   Grid,
@@ -61,83 +62,89 @@ function Play() {
   };
 
   return (
-    <Container fixed sx={{}}>
-      <Grid
-        container
+    <Container
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        justifyContent: "space-between",
+        gap: 3,
+      }}
+    >
+      <Box
         sx={{
-          minHeight: "100vh",
           display: "flex",
-          flexDirection: "column",
+          flexDirection: "row",
           justifyContent: "space-between",
+          width: "100%",
         }}
       >
-        <Grid item>
+        <Grid
+          container
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Grid item>
+            <img src="/logo.svg" alt="Logo" style={{ maxWidth: "30px" }} />
+          </Grid>
+
+          <Grid item>
+            <Button
+              type="submit"
+              variant="contained"
+              color="warning"
+              startIcon={<DoorBack />}
+              onClick={() => {
+                handleQuit(roomId);
+              }}
+            >
+              LEAVE
+            </Button>
+          </Grid>
+        </Grid>
+      </Box>
+      <Grid item>
+        <Grid container direction="column" spacing={2}>
           <Grid
             container
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
+            direction={isSmallScreen ? "column" : "row"}
+            spacing={2}
           >
-            <Grid item>
-              <img src="/logo.svg" alt="Logo" style={{ maxWidth: "30px" }} />
+            <Grid item xs={12} sm={6}>
+              <LobbyLeaderboard leaderboard={leaderboard} />
             </Grid>
-
-            <Grid item>
-              <IconButton
-                color="warning"
+            <ChatBox play={true} />
+          </Grid>
+          <Grid item>
+            {!isGameEnded && <QuizQuestions question={question} />}
+          </Grid>
+          {isGameEnded ? (
+            <Grid
+              item
+              container
+              justifyContent="space-around"
+              alignItems={"center"}
+            >
+              <Button
+                type="submit"
+                variant="contained"
+                color="info"
+                startIcon={<DoorBack />}
                 onClick={() => {
                   handleQuit(roomId);
                 }}
               >
-                <DoorBack />
-              </IconButton>
+                LEAVE
+              </Button>
             </Grid>
-          </Grid>
+          ) : (
+            ""
+          )}
         </Grid>
-        <Grid item>
-          <Grid container direction="column" spacing={2}>
-            <Grid
-              container
-              direction={isSmallScreen ? "column" : "row"}
-              spacing={2}
-            >
-              <Grid item xs={12} sm={6}>
-                <LobbyLeaderboard leaderboard={leaderboard} />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <ChatBox />
-              </Grid>
-            </Grid>
-            <Grid item>
-              {!isGameEnded && <QuizQuestions question={question} />}
-            </Grid>
-            {isGameEnded ? (
-              <Grid
-                item
-                container
-                justifyContent="space-around"
-                alignItems={"center"}
-              >
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="info"
-                  startIcon={<DoorBack />}
-                  onClick={() => {
-                    handleQuit(roomId);
-                  }}
-                >
-                  LEAVE
-                </Button>
-              </Grid>
-            ) : (
-              ""
-            )}
-          </Grid>
-        </Grid>
-        <Grid item>
-          <VolumeSlider question={question} />
-        </Grid>
+      </Grid>
+      <Grid item>
+        <VolumeSlider question={question} />
       </Grid>
     </Container>
   );

@@ -58,7 +58,6 @@ function QuizQuestions({ question }) {
             {question.options?.map((option, index) => {
               const isChosen = chosenAnswerIndex === index;
               const isCorrect = index === correctAnswerIndex;
-
               let backgroundColor = theme.palette.warning.main;
               let color = "white";
               let startIcon = null;
