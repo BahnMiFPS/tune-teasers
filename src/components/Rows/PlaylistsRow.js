@@ -33,34 +33,34 @@ function PlaylistsRow({ title, url, handleCardClick, chosenCard }) {
 
   return (
     <>
-      {isLoading ? (
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
-          <CircularProgress />
-        </Box>
-      ) : (
-        <Grid container>
-          <Grid item xs={12}>
-            <RowTitle variant="h6">{title}</RowTitle>
-          </Grid>
-          <Grid item xs={12}>
-            <Swiper
-              slidesPerView={6}
-              spaceBetween={30}
-              pagination={{
-                clickable: true,
-              }}
-              breakpoints={{
-                0: { slidesPerView: 1 },
-                480: { slidesPerView: 3, spaceBetween: 16 },
-                900: { slidesPerView: 4, spaceBetween: 16 },
-                1200: { slidesPerView: 6, spaceBetween: 16 },
-              }}
-              modules={[Pagination]}
-              className="mySwiper"
-            >
-              {playlists.map((playlist) => (
-                <>
-                  <SwiperSlide key={playlist.id} style={{ background: "none" }}>
+      <Grid container>
+        <Grid item xs={12}>
+          <RowTitle variant="h6">{title}</RowTitle>
+        </Grid>
+        <Grid item xs={12}>
+          <Swiper
+            slidesPerView={6}
+            spaceBetween={30}
+            pagination={{
+              clickable: true,
+            }}
+            breakpoints={{
+              0: { slidesPerView: 1 },
+              480: { slidesPerView: 3, spaceBetween: 16 },
+              900: { slidesPerView: 4, spaceBetween: 16 },
+              1200: { slidesPerView: 6, spaceBetween: 16 },
+            }}
+            modules={[Pagination]}
+            className="mySwiper"
+          >
+            {playlists.map((playlist) => (
+              <>
+                <SwiperSlide key={playlist.id} style={{ background: "none" }}>
+                  {isLoading ? (
+                    <Box sx={{ display: "flex", justifyContent: "center" }}>
+                      <CircularProgress />
+                    </Box>
+                  ) : (
                     <PlaylistCard
                       id={playlist.id}
                       image={playlist.image}
@@ -68,14 +68,14 @@ function PlaylistsRow({ title, url, handleCardClick, chosenCard }) {
                       handleCardClick={handleCardClick}
                       chosenCard={chosenCard}
                     />
-                  </SwiperSlide>
-                  <div class="swiper-lazy-preloader"></div>
-                </>
-              ))}
-            </Swiper>
-          </Grid>
+                  )}
+                </SwiperSlide>
+                <div class="swiper-lazy-preloader"></div>
+              </>
+            ))}
+          </Swiper>
         </Grid>
-      )}
+      </Grid>
     </>
   );
 }

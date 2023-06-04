@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Button,
   Container,
   Grid,
   IconButton,
@@ -111,6 +112,26 @@ function Play() {
             <Grid item>
               {!isGameEnded && <QuizQuestions question={question} />}
             </Grid>
+            {isGameEnded ? (
+              <Grid
+                item
+                container
+                justifyContent="space-around"
+                alignItems={"center"}
+              >
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="info"
+                  startIcon={<DoorBack />}
+                  onClick={handleQuit}
+                >
+                  LEAVE
+                </Button>
+              </Grid>
+            ) : (
+              ""
+            )}
           </Grid>
         </Grid>
         <Grid item>
