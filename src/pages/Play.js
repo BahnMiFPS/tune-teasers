@@ -123,7 +123,9 @@ function Play() {
                   variant="contained"
                   color="info"
                   startIcon={<DoorBack />}
-                  onClick={handleQuit}
+                  onClick={() => {
+                    handleQuit(roomId);
+                  }}
                 >
                   LEAVE
                 </Button>
