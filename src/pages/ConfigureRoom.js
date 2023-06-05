@@ -62,17 +62,16 @@ function ConfigureRoom() {
   }, [roomId]);
 
   return (
-    <Container style={{ height: "100vh", padding: 10 }}>
+    <Container style={{ height: "100vh" }}>
       <Stack
         direction="column"
-        spacing={3}
         style={{
           height: "100%",
           flex: 1,
           justifyContent: "space-between",
         }}
       >
-        <Typography variant="h5" color="white" textAlign="center">
+        <Typography variant="h5" color="white" textAlign="center" mt={3}>
           Pick your vibe
         </Typography>
         <Stack>
@@ -86,7 +85,7 @@ function ConfigureRoom() {
             />
           ))}
         </Stack>
-        <Box alignSelf={"center"}>
+        <Box alignSelf={"center"} mb={3}>
           <Button
             onClick={handleStartGame}
             type="submit"

@@ -66,9 +66,15 @@ function Play() {
       <Stack
         spacing={2}
         direction="column"
-        style={{ height: "100%", flex: 1, justifyContent: "space-between" }}
+        style={{
+          display: "flex",
+          height: "100%",
+          flex: 1,
+          flexDirection: "column",
+          justifyContent: "space-between",
+        }}
       >
-        <Stack direction="row" justifyContent="space-between">
+        <Stack direction="row" justifyContent="space-between" mt={3}>
           <img src="/logo.svg" alt="Logo" style={{ maxWidth: "30px" }} />
           <Button
             type="text"
@@ -81,11 +87,11 @@ function Play() {
           </Button>
         </Stack>
 
-        <Stack spacing={2}>
+        <Stack>
           <Grid
             container
             direction={isSmallScreen ? "column" : "row"}
-            style={{ padding: 20 }}
+            spacing={2}
           >
             <Grid item xs={12} sm={6}>
               <LobbyLeaderboard leaderboard={leaderboard} />
@@ -123,8 +129,11 @@ function Play() {
             ""
           )}
         </Stack>
-
-        <Stack direction="row" justifyContent="space-between">
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          justifySelf={"flex-end"}
+        >
           <VolumeSlider question={question} />
           {countDownTimer ? (
             <Typography color={theme.palette.info.main}>
