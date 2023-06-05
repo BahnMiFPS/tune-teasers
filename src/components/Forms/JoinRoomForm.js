@@ -69,11 +69,9 @@ function JoinRoomForm() {
         />
       </Grid>
 
-      <Grid item xs={6}>
-        <Button type="submit" fullWidth variant="contained" color="warning">
-          Join Room
-        </Button>
-      </Grid>
+      <Button type="submit" fullWidth variant="contained" color="warning">
+        Join Room
+      </Button>
     </Grid>
   );
 }

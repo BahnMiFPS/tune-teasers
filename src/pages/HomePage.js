@@ -1,29 +1,23 @@
 import React from "react";
-import { Container, Grid, Typography } from "@mui/material";
+import { Container, Grid, Stack, Typography } from "@mui/material";
 import { Outlet } from "react-router-dom";
+
 function HomePage() {
   return (
-    <Container>
-      <Grid
-        container
-        flexDirection="column"
+    <Container fixed maxWidth="sm">
+      <Stack
+        spacing={2}
+        direction="column"
         justifyContent="center"
         alignItems="center"
-        spacing={2}
+        height="100vh"
       >
-        <Grid item>
-          <img src="/logo.svg" alt="Logo" style={{ maxWidth: "120px" }} />
-        </Grid>
-        <Grid item>
-          <Typography variant="h4" align="center" color="white">
-            Ready to test your music knowledge?
-          </Typography>
-        </Grid>
-        <Grid item>
-          {/* <PlayerNameForm /> */}
-          <Outlet />
-        </Grid>
-      </Grid>
+        <img src="/logo.svg" alt="Logo" style={{ maxWidth: "120px" }} />
+        <Typography variant="h4" align="center" color="white">
+          Ready to test your music knowledge?
+        </Typography>
+        <Outlet />
+      </Stack>
     </Container>
   );
 }

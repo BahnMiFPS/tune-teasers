@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Grid, Box, CircularProgress, Typography } from "@mui/material";
+import {
+  Grid,
+  Box,
+  CircularProgress,
+  Typography,
+  Container,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper";
@@ -46,18 +52,30 @@ function PlaylistsRow({ title, url, handleCardClick, chosenCard }) {
             }}
             breakpoints={{
               0: { slidesPerView: 1 },
-              480: { slidesPerView: 3, spaceBetween: 16 },
-              900: { slidesPerView: 4, spaceBetween: 16 },
-              1200: { slidesPerView: 6, spaceBetween: 16 },
+              300: { slidesPerView: 3 },
+
+              600: { slidesPerView: 4 },
+
+              900: { slidesPerView: 5 },
+              1200: { slidesPerView: 6 },
             }}
             modules={[Pagination]}
             className="mySwiper"
           >
             {playlists.map((playlist) => (
               <>
-                <SwiperSlide key={playlist.id} style={{ background: "none" }}>
+                <SwiperSlide
+                  key={playlist.id}
+                  style={{ background: "none", width: "150px" }}
+                >
                   {isLoading ? (
-                    <Box sx={{ display: "flex", justifyContent: "center" }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignSelf: "flex-start",
+                      }}
+                    >
                       <CircularProgress />
                     </Box>
                   ) : (

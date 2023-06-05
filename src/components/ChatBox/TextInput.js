@@ -4,7 +4,7 @@ import { Send } from "@mui/icons-material";
 
 export const TextInput = ({ handleInputChange, handleFormSubmit, message }) => {
   return (
-    <Box sx={{ padding: 2, width: "100%" }}>
+    <Box sx={{ padding: 1, width: "100%" }}>
       <form
         onSubmit={handleFormSubmit}
         noValidate
@@ -25,6 +25,7 @@ export const TextInput = ({ handleInputChange, handleFormSubmit, message }) => {
               placeholder="Say Something"
               variant="standard"
               fullWidth
+              id="standard-text"
               value={message}
               onChange={handleInputChange}
               inputProps={{ style: { color: "white" } }}

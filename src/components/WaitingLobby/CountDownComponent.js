@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 
-function CountdownComponent() {
-  const [count, setCount] = useState(3);
+function CountDownComponent({ countdown }) {
+  const [count, setCount] = useState(countdown);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -38,4 +38,4 @@ function CountdownComponent() {
   );
 }
 
-export default CountdownComponent;
+export default CountDownComponent;

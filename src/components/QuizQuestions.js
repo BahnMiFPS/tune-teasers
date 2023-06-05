@@ -4,14 +4,13 @@ import socket from "../app/socket";
 import { useParams } from "react-router-dom";
 import { Cancel, CheckCircle } from "@mui/icons-material";
 
-function QuizQuestions({ question }) {
+function QuizQuestions({ question, setCountDownTimer, countDownTimer }) {
   const theme = useTheme();
   const [isCorrectAnswer, setIsCorrectAnswer] = useState(null);
   const [correctAnswerIndex, setCorrectAnswerIndex] = useState(null);
   const [chosenAnswerIndex, setChosenAnswerIndex] = useState(null);
   const { roomId } = useParams();
 
-  const [countDownTimer, setCountDownTimer] = useState(null);
   const handleQuestionButton = (index) => {
     setChosenAnswerIndex(index);
     socket.emit("chosen_answer", {
@@ -49,9 +48,11 @@ function QuizQuestions({ question }) {
             variant="h5"
             textAlign="center"
             color={theme.palette.info.main}
-            padding={4}
+            padding={2}
           >
-            {countDownTimer ? countDownTimer : question.question}
+            {isCorrectAnswer !== null
+              ? "Correct Answer: " + question.correctAnswer
+              : question.question}
           </Typography>
 
           <Grid container spacing={{ xs: 2, md: 3 }}>

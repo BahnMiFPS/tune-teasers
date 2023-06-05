@@ -5,7 +5,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import theme from "../../theme/theme";
 
 const cardStyles = {
-  width: "100%",
+  width: "167px",
   backgroundColor: "none",
   position: "relative",
 };

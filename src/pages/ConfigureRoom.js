@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Button, Container, Grid, Typography } from "@mui/material";
+import { Box, Button, Container, Typography } from "@mui/material";
 import { requests } from "../api/requests";
 import { useNavigate, useParams } from "react-router-dom";
 import PlaylistsRow from "../components/Rows/PlaylistsRow";
 import socket from "../app/socket";
-import CountdownComponent from "../components/WaitingLobby/CountDownComponent";
+import { Stack } from "@mui/material";
+import CountDownComponent from "../components/WaitingLobby/CountDownComponent";
 
 function ConfigureRoom() {
   const { roomId } = useParams();
@@ -61,23 +62,20 @@ function ConfigureRoom() {
   }, [roomId]);
 
   return (
-    <Container fixed>
-      <Grid
-        container
-        flexDirection="column"
-        justifyContent="space-between"
-        alignItems="center"
-        spacing={2}
-        sx={{
+    <Container style={{ height: "100vh", padding: 10 }}>
+      <Stack
+        direction="column"
+        spacing={3}
+        style={{
           height: "100%",
+          flex: 1,
+          justifyContent: "space-between",
         }}
       >
-        <Grid item xs={12}>
-          <Typography variant="h5" color="white" textAlign="center">
-            Pick your vibe
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
+        <Typography variant="h5" color="white" textAlign="center">
+          Pick your vibe
+        </Typography>
+        <Stack>
           {requests.map((category, index) => (
             <PlaylistsRow
               title={category.name}
@@ -87,8 +85,8 @@ function ConfigureRoom() {
               chosenCard={chosenCard}
             />
           ))}
-        </Grid>
-        <Grid item xs={12}>
+        </Stack>
+        <Box alignSelf={"center"}>
           <Button
             onClick={handleStartGame}
             type="submit"
@@ -98,9 +96,9 @@ function ConfigureRoom() {
           >
             Start Game
           </Button>
-        </Grid>
-      </Grid>
-      {startGameCountdown && <CountdownComponent countdown={countdown} />}
+        </Box>
+      </Stack>
+      {startGameCountdown && <CountDownComponent countdown={countdown} />}
     </Container>
   );
 }

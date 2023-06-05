@@ -70,11 +70,9 @@ function CreateRoomForm() {
         />
       </Grid>
 
-      <Grid item xs={6}>
-        <Button type="submit" fullWidth variant="contained" color="warning">
-          Create a Private Room
-        </Button>
-      </Grid>
+      <Button type="submit" fullWidth variant="contained" color="warning">
+        Create a Private Room
+      </Button>
     </Grid>
   );
 }

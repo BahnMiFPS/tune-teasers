@@ -1,4 +1,5 @@
 import { createTheme } from "@mui/material";
+import mainBackground from "../background.png";
 
 const theme = createTheme({
   palette: {
@@ -23,6 +24,10 @@ const theme = createTheme({
     },
 
     background: {
+      default: {
+        backgroundImage: `url(${mainBackground})`,
+        backgroundPosition: "center",
+      },
       paper: "#1F1147",
     },
   },

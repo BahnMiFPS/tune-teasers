@@ -5,6 +5,8 @@ import {
   Container,
   Grid,
   IconButton,
+  Stack,
+  Typography,
   useMediaQuery,
 } from "@mui/material";
 import QuizQuestions from "../components/QuizQuestions";
@@ -14,6 +16,7 @@ import { DoorBack } from "@mui/icons-material";
 import LobbyLeaderboard from "../components/WaitingLobby/LobbyLeaderboard";
 import VolumeSlider from "../components/PlayLobby/VolumeSlider";
 import ChatBox from "../components/ChatBox/ChatBox";
+import theme from "../theme/theme";
 
 function Play() {
   const [question, setQuestion] = useState(null);
@@ -22,6 +25,8 @@ function Play() {
   const { roomId } = useParams();
   const navigate = useNavigate();
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+  const [rightAnswerIs, setRightAnswerIs] = useState("");
+  const [countDownTimer, setCountDownTimer] = useState(null);
 
   useEffect(() => {
     const newQuestion = (data) => {
@@ -32,10 +37,6 @@ function Play() {
       setLeaderboard(data);
     };
 
-    const correctAnswerChosen = (data) => {
-      setLeaderboard(data);
-    };
-
     const gameEnded = () => {
       setIsGameEnded(true);
     };
@@ -43,7 +44,7 @@ function Play() {
     socket.emit("room_game_init", parseInt(roomId));
     socket.on("new_question", newQuestion);
     socket.on("leaderboard_updated", updateLeaderboard);
-    socket.on("correct_answer", correctAnswerChosen);
+    socket.on("correct_answer", updateLeaderboard);
     socket.on("game_ended", gameEnded);
 
     // Clean up the event listeners when component unmounts
@@ -51,7 +52,7 @@ function Play() {
       socket.off("room_game_init");
       socket.off("new_question", newQuestion);
       socket.off("leaderboard_updated", updateLeaderboard);
-      socket.off("correct_answer", correctAnswerChosen);
+      socket.off("correct_answer", updateLeaderboard);
       socket.off("game_ended", gameEnded);
     };
   }, [roomId]);
@@ -60,69 +61,49 @@ function Play() {
     socket.emit("leave_room", parseInt(roomId));
     navigate("/", { replace: true });
   };
-
   return (
-    <Container
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        justifyContent: "space-between",
-        gap: 3,
-      }}
-    >
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          width: "100%",
-        }}
+    <Container maxWidth="lg" style={{ height: "100%", gap: 3 }}>
+      <Stack
+        spacing={2}
+        direction="column"
+        style={{ height: "100%", flex: 1, justifyContent: "space-between" }}
       >
-        <Grid
-          container
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <Grid item>
-            <img src="/logo.svg" alt="Logo" style={{ maxWidth: "30px" }} />
-          </Grid>
+        <Stack direction="row" justifyContent="space-between">
+          <img src="/logo.svg" alt="Logo" style={{ maxWidth: "30px" }} />
+          <Button
+            type="text"
+            color="info"
+            onClick={() => {
+              handleQuit(roomId);
+            }}
+          >
+            <Typography>LEAVE</Typography>
+          </Button>
+        </Stack>
 
-          <Grid item>
-            <Button
-              type="submit"
-              variant="contained"
-              color="warning"
-              startIcon={<DoorBack />}
-              onClick={() => {
-                handleQuit(roomId);
-              }}
-            >
-              LEAVE
-            </Button>
-          </Grid>
-        </Grid>
-      </Box>
-      <Grid item>
-        <Grid container direction="column" spacing={2}>
+        <Stack spacing={2}>
           <Grid
             container
             direction={isSmallScreen ? "column" : "row"}
-            spacing={2}
+            style={{ padding: 20 }}
           >
             <Grid item xs={12} sm={6}>
               <LobbyLeaderboard leaderboard={leaderboard} />
             </Grid>
-            <ChatBox play={true} />
+            <Grid item xs={12} sm={6}>
+              <ChatBox play={true} />
+            </Grid>
           </Grid>
-          <Grid item>
-            {!isGameEnded && <QuizQuestions question={question} />}
-          </Grid>
+          {!isGameEnded && (
+            <QuizQuestions
+              question={question}
+              setCountDownTimer={setCountDownTimer}
+              timer={countDownTimer}
+            />
+          )}
           {isGameEnded ? (
-            <Grid
-              item
-              container
+            <Stack
+              direction="row"
               justifyContent="space-around"
               alignItems={"center"}
             >
@@ -137,15 +118,23 @@ function Play() {
               >
                 LEAVE
               </Button>
-            </Grid>
+            </Stack>
           ) : (
             ""
           )}
-        </Grid>
-      </Grid>
-      <Grid item>
-        <VolumeSlider question={question} />
-      </Grid>
+        </Stack>
+
+        <Stack direction="row" justifyContent="space-between">
+          <VolumeSlider question={question} />
+          {countDownTimer ? (
+            <Typography color={theme.palette.info.main}>
+              {countDownTimer}
+            </Typography>
+          ) : (
+            ""
+          )}
+        </Stack>
+      </Stack>
     </Container>
   );
 }
