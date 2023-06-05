@@ -205,8 +205,10 @@ function Lobby() {
                   onChange={handleChange}
                   fullWidth
                 >
-                  {gameModes.map((mode) => (
-                    <ToggleButton value={mode}>{mode}</ToggleButton>
+                  {gameModes.map((mode, index) => (
+                    <ToggleButton key={index} value={mode}>
+                      {mode}
+                    </ToggleButton>
                   ))}
                 </ToggleButtonGroup>
 

@@ -1,21 +1,38 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { styled } from "@mui/material/styles";
 import { Paper, Grid } from "@mui/material";
 import { TextInput } from "./TextInput.js";
 import { MessageLeft, MessageRight } from "./Messages.js";
 import socket from "../../app/socket.js";
 import { useParams } from "react-router-dom";
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  flexDirection: "column",
+  position: "relative",
+  maxHeight: "500px",
+  width: "100%",
+  height: "65vh",
+  maxWidth: "100%", // Set max width to 100%
+}));
 
-export default function ChatBox({ play }) {
+const MessagesBody = styled("div")(({ theme }) => ({
+  width: "100%",
+  height: "100%",
+  margin: "10px",
+  overflowY: "scroll",
+  flex: "1",
+}));
+export default function ChatBox() {
   const { roomId } = useParams();
 
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const messagesBodyRef = useRef(null);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = useCallback((e) => {
     setMessage(e.target.value);
-  };
+  }, []);
 
   const sendMessage = () => {
     socket.emit("send_message", {
@@ -43,25 +60,8 @@ export default function ChatBox({ play }) {
     return () => {
       socket.off("message_sent");
     };
-  }, [messages]);
-  const StyledPaper = styled(Paper)(({ theme }) => ({
-    display: "flex",
-    alignItems: "center",
-    flexDirection: "column",
-    position: "relative",
-    maxHeight: "500px",
-    width: "100%",
-    height: "65vh",
-    maxWidth: "100%", // Set max width to 100%
-  }));
+  }, []);
 
-  const MessagesBody = styled("div")(({ theme }) => ({
-    width: "100%",
-    height: "100%",
-    margin: "10px",
-    overflowY: "scroll",
-    flex: "1",
-  }));
   return (
     <Grid item xs={6} container justifyContent="center" alignItems="stretch">
       <StyledPaper elevation={2}>
@@ -86,15 +86,12 @@ export default function ChatBox({ play }) {
             )
           )}
         </MessagesBody>
-        <Grid container justifyContent="center" alignItems="center" margin={1}>
-          <Grid item xs={8} md={10}>
-            <TextInput
-              handleFormSubmit={handleFormSubmit}
-              handleInputChange={handleInputChange}
-              message={message}
-            />
-          </Grid>
-        </Grid>
+
+        <TextInput
+          handleFormSubmit={handleFormSubmit}
+          handleInputChange={handleInputChange}
+          message={message}
+        />
       </StyledPaper>
     </Grid>
   );
