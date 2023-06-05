@@ -122,7 +122,7 @@ function Lobby() {
             <Grid item xs={6}>
               <Stack spacing={3}>
                 <Paper elevation={3}>
-                  <Stack spacing={3} p={3}>
+                  <Stack spacing={3} p={3} alignItems="flex-start">
                     <Typography variant="subtitle1">
                       Game is more fun with friends
                     </Typography>
