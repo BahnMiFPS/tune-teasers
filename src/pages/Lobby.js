@@ -33,6 +33,12 @@ function Lobby() {
   const [gameMode, setGameMode] = useState("Normal");
   const gameModes = ["Slow", "Normal", "Fast"];
 
+  const checkIsOwner = (playerList, socketId) => {
+    if (playerList.length > 0) {
+      const thisPlayer = playerList.find((player) => player.id === socketId);
+      return thisPlayer.owner;
+    } else return false;
+  };
   const handleChange = (event, newGameMode) => {
     setGameMode(newGameMode);
   };
@@ -50,9 +56,11 @@ function Lobby() {
     });
   };
 
-  const handleNavigateToConfigureRoom = (roomId) => {
+  const handleNavigateToConfigureRoom = ({ roomId, playerList }) => {
+    const isThisOwner = checkIsOwner(playerList, socket.id);
     navigate(`/configure/${roomId}`, {
       replace: true,
+      state: isThisOwner,
     });
   };
 
@@ -96,6 +104,7 @@ function Lobby() {
       socket.off("message_sent", handleMessage);
     };
   }, [state.name, roomId, navigate]);
+  console.log(playerList);
 
   return (
     <Container fixed>
@@ -171,6 +180,7 @@ function Lobby() {
                         onChange={(e, newValue) => {
                           setSongNumbers(newValue);
                         }}
+                        disabled={!checkIsOwner(playerList, socket.id)}
                       />
                     </Box>
                     <Typography variant="subtitle1">
@@ -182,6 +192,7 @@ function Lobby() {
                       exclusive
                       onChange={handleChange}
                       fullWidth
+                      disabled={!checkIsOwner(playerList, socket.id)}
                     >
                       {gameModes.map((mode, index) => (
                         <ToggleButton key={index} value={mode}>
@@ -192,11 +203,12 @@ function Lobby() {
                     <Box sx={{ width: "100%", textAlign: "center" }}>
                       <Button
                         onClick={() => {
-                          handleStartPickingMusic(roomId);
+                          handleStartPickingMusic();
                         }}
                         type="submit"
                         variant="contained"
                         color="warning"
+                        disabled={!checkIsOwner(playerList, socket.id)}
                       >
                         Start Game
                       </Button>

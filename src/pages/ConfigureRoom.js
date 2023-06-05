@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button, Container, Typography } from "@mui/material";
 import { requests } from "../api/requests";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import PlaylistsRow from "../components/Rows/PlaylistsRow";
 import socket from "../app/socket";
 import { Stack } from "@mui/material";
@@ -13,12 +13,12 @@ function ConfigureRoom() {
   const [chosenCard, setChosenCard] = useState("");
   const [startGameCountdown, setStartGameCountdown] = useState(false);
   const [countdown, setCountdown] = useState(3);
+  const { state } = useLocation();
 
   const handleCardClick = (id) => {
     setChosenCard(id);
     console.log(chosenCard, id);
   };
-
   const handleStartCountdown = () => {
     setStartGameCountdown(true);
     let countdownValue = 3;
@@ -89,7 +89,7 @@ function ConfigureRoom() {
           <Button
             onClick={handleStartGame}
             type="submit"
-            disabled={chosenCard === ""}
+            disabled={chosenCard !== "" && state ? false : true}
             variant="contained"
             color="warning"
           >
