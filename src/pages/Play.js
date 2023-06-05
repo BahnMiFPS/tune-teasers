@@ -62,19 +62,18 @@ function Play() {
     navigate("/", { replace: true });
   };
   return (
-    <Container maxWidth="lg" style={{ height: "100%", gap: 3 }}>
+    <Container maxWidth="md" style={{ height: "100vh" }}>
       <Stack
         spacing={2}
         direction="column"
         style={{
           display: "flex",
           height: "100%",
-          flex: 1,
           flexDirection: "column",
           justifyContent: "space-between",
         }}
       >
-        <Stack direction="row" justifyContent="space-between" mt={3}>
+        <Stack direction="row" justifyContent="space-between" mt={2}>
           <img src="/logo.svg" alt="Logo" style={{ maxWidth: "30px" }} />
           <Button
             type="text"
@@ -110,7 +109,8 @@ function Play() {
           {isGameEnded ? (
             <Stack
               direction="row"
-              justifyContent="space-around"
+              width="100%"
+              justifyContent={"center"}
               alignItems={"center"}
             >
               <Button
@@ -129,11 +129,7 @@ function Play() {
             ""
           )}
         </Stack>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          justifySelf={"flex-end"}
-        >
+        <Stack direction="row" justifyContent="space-between">
           <VolumeSlider question={question} />
           {countDownTimer ? (
             <Typography color={theme.palette.info.main}>

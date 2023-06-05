@@ -1,11 +1,10 @@
-import { Box, Container, ThemeProvider } from "@mui/material";
+import { Box, Container, CssBaseline, ThemeProvider } from "@mui/material";
 import HomePage from "./pages/HomePage";
 import theme from "./theme/theme";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Lobby from "./pages/Lobby";
 import Play from "./pages/Play";
 import Result from "./pages/Result";
-import mainBackground from "./background.png";
 import JoinRoomForm from "./components/Forms/JoinRoomForm";
 import CreateRoomForm from "./components/Forms/CreateRoomForm";
 import ConfigureRoom from "./pages/ConfigureRoom";
@@ -44,15 +43,7 @@ const router = createBrowserRouter([
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <Box
-        sx={{
-          backgroundImage: `url(${mainBackground})`,
-          backgroundPosition: "center",
-          minHeight: "100vh",
-        }}
-      >
-        <RouterProvider router={router} />
-      </Box>
+      <RouterProvider router={router} />
     </ThemeProvider>
   );
 }
