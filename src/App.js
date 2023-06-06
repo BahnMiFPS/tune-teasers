@@ -1,45 +1,10 @@
 import { Box, Container, CssBaseline, ThemeProvider } from "@mui/material";
-import HomePage from "./pages/HomePage";
-import theme from "./theme/theme";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Lobby from "./pages/Lobby";
-import Play from "./pages/Play";
-import Result from "./pages/Result";
-import JoinRoomForm from "./components/Forms/JoinRoomForm";
-import CreateRoomForm from "./components/Forms/CreateRoomForm";
-import ConfigureRoom from "./pages/ConfigureRoom";
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <HomePage />,
-    children: [
-      {
-        path: "/invite/:roomId",
-        element: <JoinRoomForm />,
-      },
-      {
-        path: "/",
-        element: <CreateRoomForm />,
-      },
-    ],
-  },
-  {
-    path: "/lobby/:roomId",
-    element: <Lobby />,
-  },
-  {
-    path: "/configure/:roomId",
-    element: <ConfigureRoom />,
-  },
-  {
-    path: "/play/:roomId",
-    element: <Play />,
-  },
-  {
-    path: "/result/:roomId",
-    element: <Result />,
-  },
-]);
+import routes from "./routes";
+import theme from "./theme/theme";
+
+const router = createBrowserRouter(routes);
+
 function App() {
   return (
     <ThemeProvider theme={theme}>

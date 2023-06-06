@@ -1,8 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container, Grid, Stack, Typography } from "@mui/material";
-import { Outlet } from "react-router-dom";
-
+import { Outlet, useNavigate } from "react-router-dom";
+import socket from "../app/socket";
 function HomePage() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const handleCreateRoomInstead = ({ roomId }) => {
+      console.log("no room");
+      // setOpenSnackbar(true);
+      navigate(`/`, { replace: true });
+    };
+    socket.on("no_room_found", handleCreateRoomInstead);
+
+    return () => {
+      socket.off("no_room_found", handleCreateRoomInstead);
+    };
+  }, []);
   return (
     <Container fixed maxWidth="sm">
       <Stack

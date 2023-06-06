@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, Grid, Stack, Typography, useTheme } from "@mui/material";
-import socket from "../app/socket";
+import socket from "../../app/socket";
 import { useParams } from "react-router-dom";
 import { Cancel, CheckCircle } from "@mui/icons-material";
 
@@ -50,9 +50,21 @@ function QuizQuestions({ question, setCountDownTimer, countDownTimer }) {
             color={theme.palette.info.main}
             padding={2}
           >
-            {isCorrectAnswer !== null
-              ? "Correct Answer: " + question.correctAnswer
-              : question.question}
+            {isCorrectAnswer !== null ? (
+              <>
+                <Typography
+                  variant="h5"
+                  textAlign="center"
+                  color={theme.palette.text.primary}
+                  component="span"
+                >
+                  Correct Answer:
+                </Typography>{" "}
+                {question.correctAnswer}
+              </>
+            ) : (
+              question.question
+            )}
           </Typography>
 
           <Grid container spacing={{ xs: 2, md: 3 }}>
@@ -87,7 +99,13 @@ function QuizQuestions({ question, setCountDownTimer, countDownTimer }) {
                       handleQuestionButton(index);
                     }}
                   >
-                    <Typography>{option}</Typography>
+                    <Typography
+                      noWrap
+                      overflow={"hidden"}
+                      textOverflow={"ellipsis"}
+                    >
+                      {option}
+                    </Typography>
                   </Button>
                 </Grid>
               );

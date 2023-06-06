@@ -87,20 +87,12 @@ function Lobby() {
       setMessageReceived(data);
     };
 
-    const handleCreateRoomInstead = ({ roomId }) => {
-      console.log("no room");
-      setOpenSnackbar(true);
-      navigate(`/`);
-    };
-
     socket.on("start_choosing_music", handleNavigateToConfigureRoom);
-    socket.on("no_room_found", handleCreateRoomInstead);
     socket.on("new_player_joined", handleNewPlayer);
     socket.on("message_sent", handleMessage);
 
     return () => {
       socket.off("start_choosing_music", handleNavigateToConfigureRoom);
-      socket.off("no_room_found", handleCreateRoomInstead);
       socket.off("message_sent", handleMessage);
     };
   }, [state.name, roomId, navigate]);

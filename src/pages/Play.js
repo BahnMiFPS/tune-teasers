@@ -5,11 +5,12 @@ import {
   Container,
   Grid,
   IconButton,
+  LinearProgress,
   Stack,
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import QuizQuestions from "../components/QuizQuestions";
+import QuizQuestions from "../components/PlayLobby/QuizQuestions";
 import socket from "../app/socket";
 import { useNavigate, useParams } from "react-router-dom";
 import { DoorBack } from "@mui/icons-material";
@@ -75,6 +76,7 @@ function Play() {
       >
         <Stack direction="row" justifyContent="space-between" mt={2}>
           <img src="/logo.svg" alt="Logo" style={{ maxWidth: "30px" }} />
+          <LinearProgress />
           <Button
             type="text"
             color="info"
@@ -112,6 +114,7 @@ function Play() {
               width="100%"
               justifyContent={"center"}
               alignItems={"center"}
+              mt={3}
             >
               <Button
                 type="submit"
