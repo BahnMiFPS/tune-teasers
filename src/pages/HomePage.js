@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { Container, Grid, Stack, Typography } from "@mui/material";
 import { Outlet, useNavigate } from "react-router-dom";
 import socket from "../app/socket";
+import SignInForm from "../components/Forms/SignInForm";
+
 function HomePage() {
   const navigate = useNavigate();
   useEffect(() => {

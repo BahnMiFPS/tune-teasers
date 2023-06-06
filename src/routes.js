@@ -1,10 +1,10 @@
 import HomePage from "./pages/HomePage";
-import JoinRoomForm from "./components/Forms/JoinRoomForm";
-import CreateRoomForm from "./components/Forms/CreateRoomForm";
 import Lobby from "./pages/Lobby";
 import ConfigureRoom from "./pages/ConfigureRoom";
 import Play from "./pages/Play";
 import Result from "./pages/Result";
+import SignInForm from "./components/Forms/SignInForm";
+import JoinRoomForm from "./components/Forms/JoinRoomForm";
 
 const routes = [
   {
@@ -17,7 +17,7 @@ const routes = [
       },
       {
         path: "/",
-        element: <CreateRoomForm />,
+        element: <SignInForm />,
       },
     ],
   },

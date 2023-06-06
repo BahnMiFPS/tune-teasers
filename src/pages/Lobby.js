@@ -1,37 +1,34 @@
 import React, { useEffect, useState } from "react";
 import {
-  Box,
-  Button,
   Typography,
-  Avatar,
   Snackbar,
   CircularProgress,
-  Paper,
-  AvatarGroup,
   Stack,
   Container,
-  Slider,
-  ToggleButtonGroup,
-  ToggleButton,
   Grid,
 } from "@mui/material";
-import { Share } from "@mui/icons-material";
 import ChatBox from "../components/ChatBox/ChatBox";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Alert } from "@mui/material";
 import socket from "../app/socket";
+import LobbyContent from "../components/WaitingLobby/LobbyContent";
+
+const SOCKET_EVENTS = {
+  START_CHOOSING_MUSIC: "start_choosing_music",
+  NEW_PLAYER_JOINED: "new_player_joined",
+  MESSAGE_SENT: "message_sent",
+};
 
 function Lobby() {
   const { state } = useLocation();
-  const [messageReceived, setMessageReceived] = useState("");
-  const [playerList, setPlayerList] = useState([]);
   const { roomId } = useParams();
   const navigate = useNavigate();
+  const [messageReceived, setMessageReceived] = useState("");
+  const [playerList, setPlayerList] = useState([]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [songNumbers, setSongNumbers] = useState(5);
   const [gameMode, setGameMode] = useState("Normal");
-  const gameModes = ["Slow", "Normal", "Fast"];
 
   const checkIsOwner = (playerList, socketId) => {
     if (playerList.length > 0) {
@@ -39,6 +36,7 @@ function Lobby() {
       return thisPlayer.owner;
     } else return false;
   };
+
   const handleChange = (event, newGameMode) => {
     setGameMode(newGameMode);
   };
@@ -64,39 +62,33 @@ function Lobby() {
     });
   };
 
+  const handleNewPlayer = (data) => {
+    setPlayerList(data.players);
+    setIsLoading(false);
+  };
+
   useEffect(() => {
-    setIsLoading(true);
-
     socket.emit("join_room", { name: state.name, roomId: parseInt(roomId) });
-
-    const handleNewPlayer = (data) => {
-      try {
-        if (!data) {
-          setIsLoading(true);
-        } else {
-          setPlayerList(data.players);
-          setIsLoading(false);
-        }
-      } catch (error) {
-        console.error(error);
-        setIsLoading(false);
-      }
-    };
 
     const handleMessage = (data) => {
       setMessageReceived(data);
     };
 
-    socket.on("start_choosing_music", handleNavigateToConfigureRoom);
-    socket.on("new_player_joined", handleNewPlayer);
-    socket.on("message_sent", handleMessage);
+    socket.on(
+      SOCKET_EVENTS.START_CHOOSING_MUSIC,
+      handleNavigateToConfigureRoom
+    );
+    socket.on(SOCKET_EVENTS.NEW_PLAYER_JOINED, handleNewPlayer);
+    socket.on(SOCKET_EVENTS.MESSAGE_SENT, handleMessage);
 
     return () => {
-      socket.off("start_choosing_music", handleNavigateToConfigureRoom);
-      socket.off("message_sent", handleMessage);
+      socket.off(
+        SOCKET_EVENTS.START_CHOOSING_MUSIC,
+        handleNavigateToConfigureRoom
+      );
+      socket.off(SOCKET_EVENTS.MESSAGE_SENT, handleMessage);
     };
   }, [state.name, roomId, navigate]);
-  console.log(playerList);
 
   return (
     <Container fixed>
@@ -121,93 +113,17 @@ function Lobby() {
         ) : (
           <Grid container spacing={4}>
             <Grid item xs={6}>
-              <Stack spacing={3}>
-                <Paper elevation={3}>
-                  <Stack spacing={3} p={3} alignItems="flex-start">
-                    <Typography variant="subtitle1">
-                      Game is more fun with friends
-                    </Typography>
-                    <Typography variant="body2">
-                      Invite your friends to join you in this music quiz!
-                    </Typography>
-                    <AvatarGroup>
-                      {playerList.map((player, index) => (
-                        <Avatar key={player.id} src={player.image} sizes="40" />
-                      ))}
-                    </AvatarGroup>
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      size="large"
-                      color="info"
-                      startIcon={<Share />}
-                      onClick={handleShareClick}
-                      sx={{ alignSelf: "center" }}
-                    >
-                      Invite Friends
-                    </Button>
-                  </Stack>
-                </Paper>
-                <Paper elevation={3}>
-                  <Stack spacing={3} p={3}>
-                    <Stack
-                      spacing={2}
-                      direction="row"
-                      justifyContent="space-between"
-                      width="100%"
-                    >
-                      <Typography variant="subtitle1">Game Duration</Typography>
-                      <Typography variant="subtitle2">
-                        {songNumbers} songs
-                      </Typography>
-                    </Stack>
-                    <Box width="100%">
-                      <Slider
-                        defaultValue={songNumbers}
-                        color="info"
-                        aria-label="Default"
-                        step={1}
-                        min={5}
-                        max={15}
-                        onChange={(e, newValue) => {
-                          setSongNumbers(newValue);
-                        }}
-                        disabled={!checkIsOwner(playerList, socket.id)}
-                      />
-                    </Box>
-                    <Typography variant="subtitle1">
-                      Question Duration
-                    </Typography>
-                    <ToggleButtonGroup
-                      color="info"
-                      value={gameMode}
-                      exclusive
-                      onChange={handleChange}
-                      fullWidth
-                      disabled={!checkIsOwner(playerList, socket.id)}
-                    >
-                      {gameModes.map((mode, index) => (
-                        <ToggleButton key={index} value={mode}>
-                          {mode}
-                        </ToggleButton>
-                      ))}
-                    </ToggleButtonGroup>
-                    <Box sx={{ width: "100%", textAlign: "center" }}>
-                      <Button
-                        onClick={() => {
-                          handleStartPickingMusic();
-                        }}
-                        type="submit"
-                        variant="contained"
-                        color="warning"
-                        disabled={!checkIsOwner(playerList, socket.id)}
-                      >
-                        Start Game
-                      </Button>
-                    </Box>
-                  </Stack>
-                </Paper>
-              </Stack>
+              <LobbyContent
+                playerList={playerList}
+                roomId={roomId}
+                songNumbers={songNumbers}
+                setSongNumbers={setSongNumbers}
+                gameMode={gameMode}
+                checkIsOwner={checkIsOwner}
+                handleStartPickingMusic={handleStartPickingMusic}
+                handleChange={handleChange}
+                handleShareClick={handleShareClick}
+              />
             </Grid>
             <Grid
               item
