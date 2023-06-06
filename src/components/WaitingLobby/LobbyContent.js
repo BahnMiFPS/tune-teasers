@@ -21,9 +21,10 @@ function LobbyContent({
   gameMode,
   checkIsOwner,
   handleStartPickingMusic,
-  handleChange,
+  handleChangeGameMode,
   handleShareClick,
   setSongNumbers,
+  handleChangeSongNumbers,
 }) {
   const GAME_MODES = ["Slow", "Normal", "Fast"];
 
@@ -68,15 +69,13 @@ function LobbyContent({
           </Stack>
           <Box width="100%">
             <Slider
-              defaultValue={songNumbers}
+              value={songNumbers}
               color="info"
               aria-label="Default"
               step={1}
               min={5}
               max={15}
-              onChange={(e, newValue) => {
-                setSongNumbers(newValue);
-              }}
+              onChange={handleChangeSongNumbers}
               disabled={!checkIsOwner(playerList, socket.id)}
             />
           </Box>
@@ -85,7 +84,7 @@ function LobbyContent({
             color="info"
             value={gameMode}
             exclusive
-            onChange={handleChange}
+            onChange={handleChangeGameMode}
             fullWidth
             disabled={!checkIsOwner(playerList, socket.id)}
           >

@@ -17,6 +17,7 @@ const SOCKET_EVENTS = {
   START_CHOOSING_MUSIC: "start_choosing_music",
   NEW_PLAYER_JOINED: "new_player_joined",
   MESSAGE_SENT: "message_sent",
+  NEW_GAME_MODE: "new_game_mode",
 };
 
 function Lobby() {
@@ -35,10 +36,6 @@ function Lobby() {
       const thisPlayer = playerList.find((player) => player.id === socketId);
       return thisPlayer.owner;
     } else return false;
-  };
-
-  const handleChange = (event, newGameMode) => {
-    setGameMode(newGameMode);
   };
 
   const handleShareClick = () => {
@@ -67,12 +64,31 @@ function Lobby() {
     setIsLoading(false);
   };
 
+  const handleChangeGameMode = (event, newGameMode) => {
+    setGameMode(newGameMode);
+    socket.emit("update_game_mode", { newGameMode, roomId });
+  };
+  const handleUpdateGameMode = ({ newGameMode }) => {
+    setGameMode(newGameMode);
+  };
+
+  const handleChangeSongNumbers = (event, newSongNumbers) => {
+    setSongNumbers(newSongNumbers);
+    socket.emit("update_song_numbers", { newSongNumbers, roomId });
+  };
+
+  const handleUpdateSongNumbers = ({ newSongNumbers }) => {
+    setSongNumbers(newSongNumbers);
+  };
+
   useEffect(() => {
     socket.emit("join_room", { name: state.name, roomId: parseInt(roomId) });
 
     const handleMessage = (data) => {
       setMessageReceived(data);
     };
+    socket.on("new_game_mode", handleUpdateGameMode);
+    socket.on("new_song_numbers", handleUpdateSongNumbers);
 
     socket.on(
       SOCKET_EVENTS.START_CHOOSING_MUSIC,
@@ -121,8 +137,9 @@ function Lobby() {
                 gameMode={gameMode}
                 checkIsOwner={checkIsOwner}
                 handleStartPickingMusic={handleStartPickingMusic}
-                handleChange={handleChange}
+                handleChangeGameMode={handleChangeGameMode}
                 handleShareClick={handleShareClick}
+                handleChangeSongNumbers={handleChangeSongNumbers}
               />
             </Grid>
             <Grid
