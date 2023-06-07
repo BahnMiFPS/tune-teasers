@@ -41,7 +41,13 @@ const SignInForm = () => {
       } else {
         let roomId = Math.floor(Math.random() * 50);
         socket.emit("create_room", { name: values.name, roomId: roomId });
-        console.log("creating");
+        window.localStorage.setItem(
+          "userInfo",
+          JSON.stringify({
+            roomId,
+            isOwner: true,
+          })
+        );
         navigate(`/lobby/${roomId}`, {
           replace: true,
           state: data,

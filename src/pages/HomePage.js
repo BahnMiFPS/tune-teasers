@@ -7,8 +7,7 @@ import SignInForm from "../components/Forms/SignInForm";
 function HomePage() {
   const navigate = useNavigate();
   useEffect(() => {
-    const handleCreateRoomInstead = ({ roomId }) => {
-      console.log("no room");
+    const handleCreateRoomInstead = () => {
       // setOpenSnackbar(true);
       navigate(`/`, { replace: true });
     };

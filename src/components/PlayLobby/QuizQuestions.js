@@ -4,7 +4,12 @@ import socket from "../../app/socket";
 import { useParams } from "react-router-dom";
 import { Cancel, CheckCircle } from "@mui/icons-material";
 
-function QuizQuestions({ question, setCountDownTimer, countDownTimer }) {
+function QuizQuestions({
+  question,
+  setCountDownTimer,
+  countDownTimer,
+  delayCountdown,
+}) {
   const theme = useTheme();
   const [isCorrectAnswer, setIsCorrectAnswer] = useState(null);
   const [correctAnswerIndex, setCorrectAnswerIndex] = useState(null);
@@ -24,9 +29,7 @@ function QuizQuestions({ question, setCountDownTimer, countDownTimer }) {
       setIsCorrectAnswer(true);
       setCorrectAnswerIndex(answerIndex);
     });
-    socket.on("countdown", (time) => {
-      setCountDownTimer(time);
-    });
+
     socket.on("wrong_answer", () => {
       setIsCorrectAnswer(false);
     });
@@ -89,7 +92,9 @@ function QuizQuestions({ question, setCountDownTimer, countDownTimer }) {
                   <Button
                     fullWidth
                     variant="contained"
-                    disabled={isCorrectAnswer !== null}
+                    disabled={
+                      isCorrectAnswer !== null || delayCountdown !== null
+                    }
                     style={{
                       backgroundColor,
                       color,

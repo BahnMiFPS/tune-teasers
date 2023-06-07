@@ -6,6 +6,10 @@ import {
   Grid,
   IconButton,
   LinearProgress,
+  List,
+  ListItem,
+  ListItemText,
+  Paper,
   Stack,
   Typography,
   useMediaQuery,
@@ -18,6 +22,7 @@ import LobbyLeaderboard from "../components/WaitingLobby/LobbyLeaderboard";
 import VolumeSlider from "../components/PlayLobby/VolumeSlider";
 import ChatBox from "../components/ChatBox/ChatBox";
 import theme from "../theme/theme";
+import LinearWithValueLabel from "../components/Genres/LinearWithValueLabel";
 
 function Play() {
   const [question, setQuestion] = useState(null);
@@ -26,35 +31,74 @@ function Play() {
   const { roomId } = useParams();
   const navigate = useNavigate();
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
-  const [rightAnswerIs, setRightAnswerIs] = useState("");
   const [countDownTimer, setCountDownTimer] = useState(null);
+  const [delayCountdown, setDelayCountdown] = useState(null);
 
+  const [gameMode, setGameMode] = useState(null);
+  const isOwner = () => {
+    const userInfo = window.localStorage.getItem("userInfo");
+    const parsedUserInfo = JSON.parse(userInfo);
+    console.log(
+      "🚀 ~ file: Play.js:33 ~ isOwner ~ parsedUserInfo:",
+      parsedUserInfo
+    );
+    console.log(
+      roomId == parsedUserInfo.roomId && parsedUserInfo.isOwner,
+      "123"
+    );
+    if (roomId == parsedUserInfo.roomId && parsedUserInfo.isOwner) {
+      return true;
+    }
+    return false;
+  };
   useEffect(() => {
-    const newQuestion = (data) => {
-      setQuestion(data);
-    };
-
     const updateLeaderboard = (data) => {
       setLeaderboard(data);
+    };
+    const newQuestion = (data) => {
+      setQuestion(data);
+      setDelayCountdown(null);
+
+      if (isOwner()) {
+        console.log("next_question");
+        socket.emit("next_question", parseInt(roomId));
+      }
     };
 
     const gameEnded = () => {
       setIsGameEnded(true);
+      setCountDownTimer(null);
+      setDelayCountdown(null);
     };
+    socket.on("question_init", (data) => {
+      setGameMode(data);
 
+      if (isOwner()) {
+        socket.emit("next_question", parseInt(roomId));
+      }
+    });
+    const handleCountDownToNextQuestion = (delayCountdown) => {
+      setDelayCountdown(delayCountdown);
+    };
+    socket.on("going_to_next_question", handleCountDownToNextQuestion);
+    socket.on("countdown_to_next_question", (time) => {
+      setCountDownTimer(time);
+    });
     socket.emit("room_game_init", parseInt(roomId));
     socket.on("new_question", newQuestion);
     socket.on("leaderboard_updated", updateLeaderboard);
     socket.on("correct_answer", updateLeaderboard);
     socket.on("game_ended", gameEnded);
-
     // Clean up the event listeners when component unmounts
     return () => {
+      socket.off("going_to_next_question", handleCountDownToNextQuestion);
+
       socket.off("room_game_init");
       socket.off("new_question", newQuestion);
       socket.off("leaderboard_updated", updateLeaderboard);
       socket.off("correct_answer", updateLeaderboard);
       socket.off("game_ended", gameEnded);
+      socket.off("next_question", parseInt(roomId));
     };
   }, [roomId]);
 
@@ -62,6 +106,19 @@ function Play() {
     socket.emit("leave_room", parseInt(roomId));
     navigate("/", { replace: true });
   };
+  let progressMultiplyValue;
+  let delayProgressMultiplyValue = 100 / 3;
+  switch (gameMode) {
+    case "Fast":
+      progressMultiplyValue = 33; // 20
+      break;
+    case "Slow":
+      progressMultiplyValue = 5; // 3
+      break;
+    default:
+      progressMultiplyValue = 20; // 5
+      break;
+  }
   return (
     <Container maxWidth="md" style={{ height: "100vh" }}>
       <Stack
@@ -74,12 +131,39 @@ function Play() {
           justifyContent: "space-between",
         }}
       >
-        <Stack direction="row" justifyContent="space-between" mt={2}>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems={"flex-end"}
+          mt={2}
+          spacing={5}
+        >
           <img src="/logo.svg" alt="Logo" style={{ maxWidth: "30px" }} />
-          <LinearProgress />
+          <Box sx={{ width: "100%" }}>
+            {delayCountdown ? (
+              <>
+                <Typography textAlign="center" color="white">
+                  Going to next question
+                </Typography>
+                <LinearProgress
+                  variant="determinate"
+                  value={delayCountdown * delayProgressMultiplyValue}
+                  color="info"
+                />
+              </>
+            ) : (
+              <>
+                <LinearProgress
+                  variant="determinate"
+                  value={countDownTimer * progressMultiplyValue}
+                  color="error"
+                />
+              </>
+            )}
+          </Box>
           <Button
             type="text"
-            color="info"
+            color="error"
             onClick={() => {
               handleQuit(roomId);
             }}
@@ -103,10 +187,61 @@ function Play() {
           </Grid>
           {!isGameEnded && (
             <QuizQuestions
+              delayCountdown={delayCountdown}
               question={question}
               setCountDownTimer={setCountDownTimer}
               timer={countDownTimer}
             />
+          )}
+          {!isGameEnded && !question ? (
+            <Stack spacing={1} mt={3}>
+              <Typography
+                variant="h4"
+                align="center"
+                gutterBottom
+                color={theme.palette.error.main}
+              >
+                Game Rules:
+              </Typography>
+              <List>
+                <ListItemText>
+                  <Typography
+                    variant="body1"
+                    color={theme.palette.text.primary}
+                  >
+                    <b>First person</b> to get a correct answer will get{" "}
+                    <b>2 points</b>.
+                  </Typography>
+                </ListItemText>
+                <ListItemText>
+                  <Typography
+                    variant="body1"
+                    color={theme.palette.text.primary}
+                  >
+                    The game will proceed to next question when:
+                  </Typography>
+                </ListItemText>
+
+                <ListItemText inset>
+                  <Typography
+                    variant="body1"
+                    color={theme.palette.text.primary}
+                  >
+                    <b>- Time runs out</b>
+                  </Typography>
+                </ListItemText>
+                <ListItemText inset>
+                  <Typography
+                    variant="body1"
+                    color={theme.palette.text.primary}
+                  >
+                    <b>- Everyone has answered</b>
+                  </Typography>
+                </ListItemText>
+              </List>
+            </Stack>
+          ) : (
+            ""
           )}
           {isGameEnded ? (
             <Stack

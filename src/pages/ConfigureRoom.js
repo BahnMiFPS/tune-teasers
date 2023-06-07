@@ -19,6 +19,7 @@ function ConfigureRoom() {
     setChosenCard(id);
     console.log(chosenCard, id);
   };
+
   const handleStartCountdown = () => {
     setStartGameCountdown(true);
     let countdownValue = 3;

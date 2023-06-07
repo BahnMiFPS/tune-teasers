@@ -26,6 +26,13 @@ function JoinRoomForm() {
     onSubmit: (values) => {
       const data = { name: values.name, roomId: parseInt(roomId) };
       socket.emit("join_room", data);
+      window.localStorage.setItem(
+        "userInfo",
+        JSON.stringify({
+          roomId,
+          isOwner: false,
+        })
+      );
       navigate(`/lobby/${roomId}`, {
         replace: true,
         state: data,
