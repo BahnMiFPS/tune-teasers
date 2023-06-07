@@ -73,7 +73,7 @@ function ConfigureRoom() {
         }}
       >
         <Typography variant="h5" color="white" textAlign="center" mt={3}>
-          Pick your vibe
+          Waiting for Host to pick a playlist...
         </Typography>
         <Stack>
           {requests.map((category, index) => (

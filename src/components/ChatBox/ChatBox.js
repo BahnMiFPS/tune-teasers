@@ -24,13 +24,18 @@ const MessagesBody = styled("div")(({ theme }) => ({
   overflowY: "scroll",
   flex: "1",
 }));
+
 export default function ChatBox() {
   const { roomId } = useParams();
 
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const messagesBodyRef = useRef(null);
-
+  const scrollToBottom = () => {
+    if (messagesBodyRef.current) {
+      messagesBodyRef.current.scrollTop = messagesBodyRef.current.scrollHeight;
+    }
+  };
   const handleInputChange = useCallback((e) => {
     setMessage(e.target.value);
   }, []);
@@ -53,15 +58,12 @@ export default function ChatBox() {
       setMessages((prevMessages) => [...prevMessages, data]);
     });
 
-    // Scroll to the bottom of the messages body
-    if (messagesBodyRef.current) {
-      messagesBodyRef.current.scrollTop = messagesBodyRef.current.scrollHeight;
-    }
+    scrollToBottom();
 
     return () => {
       socket.off("message_sent");
     };
-  }, []);
+  }, [messages]);
 
   return (
     <StyledPaper elevation={2}>
