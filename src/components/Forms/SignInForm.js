@@ -66,11 +66,9 @@ const SignInForm = () => {
     socket.on("join_room_error", ({ message }) => {
       formik.setFieldError("roomNumber", message); // Set error for the roomNumber field
       setNoRoomFound(true);
-      console.log(message);
     });
 
     socket.on("join_room_success", (data) => {
-      console.log(data.name);
       navigate(`/lobby/${data.roomId}`, {
         replace: true,
         state: data,

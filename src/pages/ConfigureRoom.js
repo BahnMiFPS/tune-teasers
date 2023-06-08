@@ -17,7 +17,6 @@ function ConfigureRoom() {
 
   const handleCardClick = (id) => {
     setChosenCard(id);
-    console.log(chosenCard, id);
   };
 
   const handleStartCountdown = () => {
@@ -40,7 +39,6 @@ function ConfigureRoom() {
   };
 
   const handleStartGame = () => {
-    console.log("picked_music_starting_game");
     socket.emit("picked_music_starting_game", {
       roomId: parseInt(roomId),
       playlistId: chosenCard,
