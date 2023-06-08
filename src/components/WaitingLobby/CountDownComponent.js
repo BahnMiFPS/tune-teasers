@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 
-function CountDownComponent({ countdown }) {
+function CountDownComponent({ countdown, isWaitingForQuestions }) {
   const [count, setCount] = useState(countdown);
 
   useEffect(() => {
@@ -13,6 +13,10 @@ function CountDownComponent({ countdown }) {
       clearInterval(timer);
     };
   }, []);
+
+  useEffect(() => {
+    setCount(countdown);
+  }, [countdown]);
 
   return (
     <Box
@@ -31,9 +35,21 @@ function CountDownComponent({ countdown }) {
         bgcolor: "rgba(0, 0, 0, 0.5)",
       }}
     >
-      <Typography variant="h1" style={{ marginTop: "1rem" }}>
-        {count}
-      </Typography>
+      {isWaitingForQuestions ? (
+        <Box>
+          <CircularProgress />
+          <Typography
+            variant="subtitle2"
+            style={{ color: "white", marginTop: "1rem" }}
+          >
+            Generating Questions...
+          </Typography>
+        </Box>
+      ) : (
+        <Typography variant="h1" style={{ marginTop: "1rem" }}>
+          {count}
+        </Typography>
+      )}
     </Box>
   );
 }

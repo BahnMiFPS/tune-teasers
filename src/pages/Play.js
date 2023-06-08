@@ -38,14 +38,7 @@ function Play() {
   const isOwner = () => {
     const userInfo = window.localStorage.getItem("userInfo");
     const parsedUserInfo = JSON.parse(userInfo);
-    console.log(
-      "🚀 ~ file: Play.js:33 ~ isOwner ~ parsedUserInfo:",
-      parsedUserInfo
-    );
-    console.log(
-      roomId == parsedUserInfo.roomId && parsedUserInfo.isOwner,
-      "123"
-    );
+
     if (roomId == parsedUserInfo.roomId && parsedUserInfo.isOwner) {
       return true;
     }
@@ -60,7 +53,6 @@ function Play() {
       setDelayCountdown(null);
 
       if (isOwner()) {
-        console.log("next_question");
         socket.emit("next_question", parseInt(roomId));
       }
     };

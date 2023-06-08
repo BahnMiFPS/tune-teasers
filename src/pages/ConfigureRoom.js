@@ -14,12 +14,14 @@ function ConfigureRoom() {
   const [startGameCountdown, setStartGameCountdown] = useState(false);
   const [countdown, setCountdown] = useState(3);
   const { state } = useLocation();
+  const [isWaitingForQuestions, setIsWaitingForQuestions] = useState(false);
 
   const handleCardClick = (id) => {
     setChosenCard(id);
   };
 
   const handleStartCountdown = () => {
+    setIsWaitingForQuestions(false);
     setStartGameCountdown(true);
     let countdownValue = 3;
     setCountdown(countdownValue);
@@ -45,6 +47,10 @@ function ConfigureRoom() {
     });
   };
 
+  const handleGeneratingQuestions = () => {
+    setIsWaitingForQuestions(true);
+  };
+
   useEffect(() => {
     const handleNavigateToPlay = (data) => {
       navigate(`/play/${data}`, {
@@ -54,9 +60,11 @@ function ConfigureRoom() {
 
     socket.on("countdown_start", handleStartCountdown);
     socket.on("game_started", handleNavigateToPlay);
+    socket.on("generating_questions", handleGeneratingQuestions);
 
     return () => {
       socket.off("game_started", handleNavigateToPlay);
+      socket.off("generating_questions", handleGeneratingQuestions);
     };
   }, [roomId]);
 
@@ -96,7 +104,12 @@ function ConfigureRoom() {
           </Button>
         </Box>
       </Stack>
-      {startGameCountdown && <CountDownComponent countdown={countdown} />}
+
+      {isWaitingForQuestions ? (
+        <CountDownComponent isWaitingForQuestions={isWaitingForQuestions} />
+      ) : (
+        startGameCountdown && <CountDownComponent countdown={countdown} />
+      )}
     </Container>
   );
 }
