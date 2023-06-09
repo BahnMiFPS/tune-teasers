@@ -24,6 +24,7 @@ import VolumeSlider from "../components/PlayLobby/VolumeSlider";
 import ChatBox from "../components/ChatBox/ChatBox";
 import theme from "../theme/theme";
 import LinearWithValueLabel from "../components/Genres/LinearWithValueLabel";
+import MyConfetti from "../components/PlayLobby/MyConfetti";
 
 function Play() {
   const [question, setQuestion] = useState(null);
@@ -33,7 +34,6 @@ function Play() {
   const navigate = useNavigate();
   const [countDownTimer, setCountDownTimer] = useState(null);
   const [delayCountdown, setDelayCountdown] = useState(null);
-
   const [gameMode, setGameMode] = useState(null);
   const isOwner = () => {
     const userInfo = window.localStorage.getItem("userInfo");
@@ -242,6 +242,7 @@ function Play() {
               alignItems={"center"}
               mt={3}
             >
+              <MyConfetti />
               <Button
                 type="submit"
                 variant="contained"
