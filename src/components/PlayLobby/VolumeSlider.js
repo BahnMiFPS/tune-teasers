@@ -10,6 +10,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { Typography } from "@mui/material";
 
 export default function VolumeSlider({ question }) {
   const audioRef = useRef(null);
@@ -76,8 +77,8 @@ export default function VolumeSlider({ question }) {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handlePlayback} color="text" autoFocus>
-              Yes
+            <Button onClick={handlePlayback} autoFocus>
+              <Typography color="white">Yes</Typography>
             </Button>
           </DialogActions>
         </Dialog>
