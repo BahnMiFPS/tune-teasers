@@ -16,6 +16,7 @@ export default function VolumeSlider({ question }) {
   const audioRef = useRef(null);
   const [value, setValue] = useState(20);
   const [autoplayBlocked, setAutoplayBlocked] = useState(false);
+  const [isThisMobile, setIsThisMobile] = useState(false);
 
   useEffect(() => {
     const audioElement = audioRef.current;
@@ -28,6 +29,7 @@ export default function VolumeSlider({ question }) {
         playPromise.catch((error) => {
           // Auto-play was blocked. Show a UI element to let the user manually start playback.
           setAutoplayBlocked(true);
+          setIsThisMobile(true);
         });
       }
     }
@@ -54,14 +56,21 @@ export default function VolumeSlider({ question }) {
     <Box sx={{ width: 200 }}>
       <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
         <audio ref={audioRef} src={question?.preview_url} autoPlay />
-        <VolumeDown sx={{ fill: "white" }} />
-        <Slider
-          aria-label="Volume"
-          color="info"
-          value={value}
-          onChange={handleChange}
-        />
-        <VolumeUp sx={{ fill: "white" }} />
+        {isThisMobile ? (
+          ""
+        ) : (
+          <>
+            <VolumeDown sx={{ fill: "white" }} />
+            <Slider
+              aria-label="Volume"
+              color="info"
+              value={value}
+              onChange={handleChange}
+            />
+            <VolumeUp sx={{ fill: "white" }} />
+          </>
+        )}
+
         <Dialog
           open={autoplayBlocked}
           onClose={handlePlayback}
