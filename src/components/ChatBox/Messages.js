@@ -101,7 +101,7 @@ const DisplayName = styled("div")`
 `;
 
 export const MessageLeft = (props) => {
-  const message = props.message ? props.message : "no message";
+  const message = props.message ? props.message : "...";
   const displayName = props.displayName ? props.displayName : "Unknown";
   const photoURL = props.photoURL ? props.photoURL : "dummy.js";
 
@@ -123,7 +123,7 @@ export const MessageLeft = (props) => {
 };
 
 export const MessageRight = (props) => {
-  const message = props.message ? props.message : "no message";
+  const message = props.message ? props.message : "...";
 
   return (
     <MessageRowRight>

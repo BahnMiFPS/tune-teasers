@@ -20,14 +20,14 @@ function HomePage() {
   return (
     <Container fixed maxWidth="sm">
       <Stack
-        spacing={2}
         direction="column"
         justifyContent="center"
         alignItems="center"
         height="100vh"
+        gap={2}
       >
         <img src="/logo.svg" alt="Logo" style={{ maxWidth: "120px" }} />
-        <Typography variant="h4" align="center" color="white">
+        <Typography variant="h5" align="center" color="white">
           Ready to test your music knowledge?
         </Typography>
         <Outlet />

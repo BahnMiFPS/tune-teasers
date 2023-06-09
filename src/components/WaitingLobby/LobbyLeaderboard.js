@@ -13,7 +13,7 @@ function LobbyLeaderboard({ leaderboard }) {
   return (
     <Box maxHeight="400px" sx={{ overflowY: "scroll", paddingRight: "16px" }}>
       <Container maxWidth="sm">
-        <Typography variant="h5" color="white" align="left" mb={2}>
+        <Typography variant="h5" color="white" align="left">
           Leaderboard
         </Typography>
         {sortedLeaderboard?.map((player, index) => (
@@ -34,6 +34,7 @@ function LobbyLeaderboard({ leaderboard }) {
               justifyContent: "space-between",
               padding: 1,
               marginBottom: 2,
+              width: "100%",
             }}
             key={index}
           >
