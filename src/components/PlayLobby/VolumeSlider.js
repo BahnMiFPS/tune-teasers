@@ -76,7 +76,7 @@ export default function VolumeSlider({ question }) {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handlePlayback} color="primary" autoFocus>
+            <Button onClick={handlePlayback} color="white" autoFocus>
               Yes
             </Button>
           </DialogActions>

@@ -6,6 +6,7 @@ import {
   Stack,
   Container,
   Grid,
+  Hidden,
 } from "@mui/material";
 import ChatBox from "../components/ChatBox/ChatBox";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -128,7 +129,7 @@ function Lobby() {
           </Stack>
         ) : (
           <Grid container spacing={4}>
-            <Grid item xs={6}>
+            <Grid item sm={6} xs={12}>
               <LobbyContent
                 playerList={playerList}
                 roomId={roomId}
@@ -142,15 +143,17 @@ function Lobby() {
                 handleChangeSongNumbers={handleChangeSongNumbers}
               />
             </Grid>
-            <Grid
-              item
-              xs={6}
-              container
-              justifyContent="center"
-              alignItems="stretch"
-            >
-              <ChatBox />
-            </Grid>
+            <Hidden smDown>
+              <Grid
+                item
+                sm={6}
+                container
+                justifyContent="center"
+                alignItems="stretch"
+              >
+                <ChatBox />
+              </Grid>
+            </Hidden>
           </Grid>
         )}
         <Snackbar

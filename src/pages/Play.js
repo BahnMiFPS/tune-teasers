@@ -4,6 +4,7 @@ import {
   Button,
   Container,
   Grid,
+  Hidden,
   IconButton,
   LinearProgress,
   List,
@@ -30,7 +31,6 @@ function Play() {
   const [leaderboard, setLeaderboard] = useState([]);
   const { roomId } = useParams();
   const navigate = useNavigate();
-  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const [countDownTimer, setCountDownTimer] = useState(null);
   const [delayCountdown, setDelayCountdown] = useState(null);
 
@@ -71,6 +71,7 @@ function Play() {
     });
     const handleCountDownToNextQuestion = (delayCountdown) => {
       setDelayCountdown(delayCountdown);
+      setCountDownTimer(null);
     };
     socket.on("going_to_next_question", handleCountDownToNextQuestion);
     socket.on("countdown_to_next_question", (time) => {
@@ -165,17 +166,15 @@ function Play() {
         </Stack>
 
         <Stack>
-          <Grid
-            container
-            direction={isSmallScreen ? "column" : "row"}
-            spacing={2}
-          >
+          <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <LobbyLeaderboard leaderboard={leaderboard} />
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <ChatBox play={true} />
-            </Grid>
+            <Hidden smDown>
+              <Grid item sm={6}>
+                <ChatBox play={true} />
+              </Grid>
+            </Hidden>
           </Grid>
           {!isGameEnded && (
             <QuizQuestions
