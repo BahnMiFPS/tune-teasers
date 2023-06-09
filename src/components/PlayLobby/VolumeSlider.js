@@ -4,6 +4,12 @@ import Stack from "@mui/material/Stack";
 import Slider from "@mui/material/Slider";
 import VolumeDown from "@mui/icons-material/VolumeDown";
 import VolumeUp from "@mui/icons-material/VolumeUp";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 export default function VolumeSlider({ question }) {
   const audioRef = useRef(null);
@@ -46,7 +52,7 @@ export default function VolumeSlider({ question }) {
   return (
     <Box sx={{ width: 200 }}>
       <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
-        <audio ref={audioRef} src={question?.preview_url} />
+        <audio ref={audioRef} src={question?.preview_url} autoPlay />
         <VolumeDown sx={{ fill: "white" }} />
         <Slider
           aria-label="Volume"
@@ -55,9 +61,26 @@ export default function VolumeSlider({ question }) {
           onChange={handleChange}
         />
         <VolumeUp sx={{ fill: "white" }} />
-        {autoplayBlocked && (
-          <button onClick={handlePlayback}>Allow Autoplay</button>
-        )}
+        <Dialog
+          open={autoplayBlocked}
+          onClose={handlePlayback}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Audio Permission"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Press "Yes" to allow audio.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handlePlayback} color="primary" autoFocus>
+              Yes
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Stack>
     </Box>
   );
