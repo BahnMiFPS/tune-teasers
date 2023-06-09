@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Slider from "@mui/material/Slider";
@@ -7,13 +7,22 @@ import VolumeUp from "@mui/icons-material/VolumeUp";
 
 export default function VolumeSlider({ question }) {
   const audioRef = useRef(null);
-  const [value, setValue] = React.useState(20);
+  const [value, setValue] = useState(20);
+  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
 
   useEffect(() => {
     const audioElement = audioRef.current;
 
     if (audioElement) {
       audioElement.volume = value / 100; // Set initial volume based on the value state
+
+      const playPromise = audioElement.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((error) => {
+          // Auto-play was blocked. Show a UI element to let the user manually start playback.
+          setAutoplayBlocked(true);
+        });
+      }
     }
   }, [value]);
 
@@ -26,10 +35,18 @@ export default function VolumeSlider({ question }) {
     }
   };
 
+  const handlePlayback = () => {
+    const audioElement = audioRef.current;
+    if (audioElement) {
+      audioElement.play();
+      setAutoplayBlocked(false);
+    }
+  };
+
   return (
     <Box sx={{ width: 200 }}>
       <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
-        <audio ref={audioRef} src={question?.preview_url} autoPlay={true} />
+        <audio ref={audioRef} src={question?.preview_url} />
         <VolumeDown sx={{ fill: "white" }} />
         <Slider
           aria-label="Volume"
@@ -38,6 +55,9 @@ export default function VolumeSlider({ question }) {
           onChange={handleChange}
         />
         <VolumeUp sx={{ fill: "white" }} />
+        {autoplayBlocked && (
+          <button onClick={handlePlayback}>Allow Autoplay</button>
+        )}
       </Stack>
     </Box>
   );

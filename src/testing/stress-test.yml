@@ -64,9 +64,9 @@ scenarios:
           channel: "picked_music_starting_game"
           data:
             roomId: { { __instance } }
-            playlistId: "37i9dQZF1DWXti3N4Wp5xy"
+            playlistId: 37i9dQZF1DWXti3N4Wp5xy
 
-      - think: 2
+      - think: 10
 
       - emit:
           channel: "start_game"
