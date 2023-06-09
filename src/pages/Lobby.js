@@ -27,7 +27,7 @@ function Lobby() {
   const [messageReceived, setMessageReceived] = useState("");
   const [playerList, setPlayerList] = useState([]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [songNumbers, setSongNumbers] = useState(5);
   const [gameMode, setGameMode] = useState("Normal");
 
@@ -61,7 +61,7 @@ function Lobby() {
 
   const handleNewPlayer = (data) => {
     setPlayerList(data.players);
-    setIsLoading(false);
+    setIsLoading(data.isLoading);
   };
 
   const handleChangeGameMode = (event, newGameMode) => {
